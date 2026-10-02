@@ -1,652 +1,100 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Lifetime Line</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
-                    },
-                    colors: {
-                        pastel: {
-                            bg: '#fcfbf7',
-                            blue: '#e2f0d9', blueText: '#274e13',
-                            green: '#e2efda', greenText: '#375623',
-                            orange: '#fce4d6', orangeText: '#c65911',
-                            purple: '#f2f0f9', purpleText: '#595959',
-                            pink: '#f8cbad', pinkText: '#a61c1c',
-                            cardBg: '#ffffff',
-                            border: '#edebe4'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        body { background-color: #fcfbf7; color: #2c2c2c; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        @keyframes pulse-mic {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .recording-active {
-            animation: pulse-mic 1.5s infinite;
-            background-color: #fee2e2 !important;
-            color: #ef4444 !important;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(16px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .modal-enter { animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
-        .spinner {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #6366f1;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        @media print {
-            body { background: white !important; }
-            header, button, .no-print { display: none !important; }
-            .print-book-mode { box-shadow: none !important; border: none !important; padding: 0 !important; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#263c35">
+<title>My Life in Chapters</title>
+<style>
+:root{--ink:#26352f;--muted:#68756e;--paper:#fbf8f1;--card:#fffdf8;--line:#e6e0d4;--green:#35594b;--sage:#e5eee5;--gold:#c28b42;--rose:#f3e5dc;--shadow:0 10px 30px #25382b0b}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1180px;margin:auto;padding:22px}.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0 26px;border-bottom:1px solid var(--line)}.brand{display:flex;gap:13px;align-items:center}.logo{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:var(--green);color:white;font-size:25px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--muted);font-weight:750}.hero h1{font:500 clamp(25px,4vw,36px)/1.15 Georgia,serif;margin:4px 0}.hero p{margin:5px 0 0;color:var(--muted);font-size:14px}.primary,.secondary,.danger{border:0;border-radius:12px;padding:11px 16px;font-weight:700}.primary{background:var(--green);color:white}.primary:hover{background:#284638}.secondary{background:var(--sage);color:var(--green)}.danger{background:#f8e8e5;color:#9c3b32}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:26px;padding-top:24px}.sidebar{align-self:start;position:sticky;top:12px}.side-title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:0 0 10px}.year-tools{display:flex;gap:7px;margin-bottom:12px}.year-tools input{min-width:0;width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white}.year-list{max-height:58vh;overflow:auto;padding-right:4px;display:flex;flex-direction:column;gap:4px}.year-btn{border:0;text-align:left;background:transparent;padding:9px 12px;border-radius:10px;display:flex;justify-content:space-between;color:var(--ink)}.year-btn small{color:var(--muted)}.year-btn.active,.year-btn:hover{background:var(--sage);color:var(--green);font-weight:750}.privacy-note{margin-top:18px;padding:13px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px;background:#fffaf1}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}.toolbar h2{font:500 30px Georgia,serif;margin:0}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters select,.search{border:1px solid var(--line);background:white;border-radius:10px;padding:9px 11px;color:var(--ink)}.search{width:min(240px,100%)}.year-intro{background:linear-gradient(120deg,#e8efe6,#f6eadb);padding:19px 21px;border-radius:17px;margin-bottom:22px}.year-intro strong{font:500 23px Georgia,serif;display:block}.year-intro span{font-size:13px;color:var(--muted)}.timeline{position:relative;padding-left:25px}.timeline:before{content:"";position:absolute;left:7px;top:9px;bottom:15px;width:2px;background:#dce3d8}.entry{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:var(--shadow)}.entry:before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid var(--paper);left:-25px;top:22px}.entry-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.entry-type{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--green);background:var(--sage);border-radius:7px;padding:4px 7px}.entry h3{font:500 22px/1.25 Georgia,serif;margin:9px 0 3px}.entry-meta{font-size:13px;color:var(--muted)}.entry p{white-space:pre-wrap;margin:12px 0 0}.entry-photo{display:block;max-width:100%;max-height:380px;object-fit:contain;border-radius:12px;margin-top:13px;background:#f1eee7}.entry-actions{display:flex;gap:6px;flex-shrink:0}.icon-btn{border:1px solid var(--line);border-radius:9px;background:white;color:var(--muted);padding:6px 9px}.voice-box{margin-top:12px;background:#f5f2e9;border-radius:11px;padding:10px}.voice-box audio{width:100%;height:38px}.voice-label{font-size:12px;color:var(--muted);margin-bottom:5px}.empty{padding:40px 22px;text-align:center;border:1px dashed #d7d0c3;border-radius:16px;color:var(--muted)}.empty strong{display:block;font:500 24px Georgia,serif;color:var(--ink);margin-bottom:6px}.modal{position:fixed;inset:0;background:#16231dcc;display:none;align-items:flex-start;justify-content:center;padding:18px;overflow:auto;z-index:10}.modal.open{display:flex}.dialog{width:min(720px,100%);background:var(--paper);border-radius:20px;padding:23px;margin:auto 0;box-shadow:0 24px 80px #0004}.dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.dialog h2{font:500 28px Georgia,serif;margin:0}.close{border:0;background:transparent;font-size:28px;color:var(--muted)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:750}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid #dcd5c8;border-radius:10px;background:white;color:var(--ink)}.field textarea{min-height:115px;resize:vertical}.hint{font-size:12px;color:var(--muted)}.year-pick{display:flex;gap:7px;align-items:center}.year-pick input{flex:1;min-width:0}.year-pick button{padding:8px 10px;border:1px solid var(--line);background:white;border-radius:9px}.voice-controls{display:flex;gap:8px;flex-wrap:wrap}.recording{background:#a7372f!important}.form-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:19px}.form-actions-right{display:flex;gap:8px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#20392e;color:white;border-radius:12px;padding:11px 17px;box-shadow:var(--shadow);display:none;z-index:20;max-width:90vw}.toast.show{display:block}.footer{color:var(--muted);font-size:12px;text-align:center;padding:30px 0 12px}.print-only{display:none}
+@media(max-width:760px){.shell{padding:14px}.hero{align-items:flex-start}.hero .primary{padding:10px 12px;white-space:nowrap}.layout{grid-template-columns:1fr;gap:17px}.sidebar{position:static}.year-list{max-height:none;overflow-x:auto;overflow-y:hidden;display:flex;flex-direction:row;padding:2px 0 7px}.year-btn{white-space:nowrap;gap:8px;border:1px solid var(--line);background:white}.year-btn.active{border-color:#b7cdb9}.privacy-note{display:none}.toolbar h2{font-size:27px}.search{width:100%}.filters{width:100%}.filters select{flex:1;min-width:0}.timeline{padding-left:22px}.entry{padding:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.dialog{padding:18px}.entry-actions{gap:4px}.icon-btn{padding:6px}}
+@media print{body{background:white}.shell{max-width:none;padding:0}.hero .primary,.sidebar,.toolbar .filters,.entry-actions,.footer,.year-intro span{display:none!important}.layout{display:block;padding:0}.toolbar h2{font-size:24px}.entry{break-inside:avoid;box-shadow:none}.timeline:before{background:#ddd}.modal,.toast{display:none!important}.print-only{display:block}}
+</style>
 </head>
-
-<body class="font-sans antialiased pb-32">
-    <!-- Header -->
-    <header class="sticky top-0 z-30 bg-[#fcfbf7]/95 backdrop-blur-md border-b border-gray-200/60 px-4 py-4 sm:px-8 shadow-sm">
-        <div class="max-w-3xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-serif font-bold text-gray-900 tracking-tight">Lifetime Line</h1>
-                <p class="text-xs sm:text-sm font-medium text-gray-500 italic">Your personal history, beautifully told.</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <button id="book-view-btn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs sm:text-sm font-medium bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    <span id="book-btn-text">Book View</span>
-                </button>
-                <button id="clear-data-btn" class="text-xs text-gray-400 hover:text-red-500 px-2 py-1 transition-colors" title="Reset Data">Reset</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="max-w-3xl mx-auto mt-8 sm:mt-12 px-4 sm:px-6 relative">
-        <div id="empty-state" class="flex flex-col items-center justify-center mt-24 text-center hidden">
-            <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mb-5 border border-amber-200 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            </div>
-            <h2 class="text-2xl font-serif font-semibold text-gray-800 mb-2">Your timeline is ready</h2>
-            <p class="text-gray-500 max-w-sm text-sm">Tap the floating plus button below to add your first job, trip, home, photo, or memory.</p>
-        </div>
-
-        <div id="timeline-container" class="relative border-l-2 border-amber-900/10 ml-3 sm:ml-6 space-y-12 pb-16">
-            <!-- Timeline items rendered dynamically -->
-        </div>
-    </main>
-
-    <!-- Floating Action Button -->
-    <button id="open-modal-btn" class="no-print fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-tr from-amber-700 to-amber-600 hover:from-amber-800 hover:to-amber-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-105 active:scale-95 z-40">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-    </button>
-
-    <!-- Add / Edit Modal -->
-    <div id="add-modal" class="no-print fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-        <div class="bg-white w-full sm:max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[92vh]">
-            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/80">
-                <h2 id="modal-title" class="text-xl font-serif font-bold text-gray-900">Add Lifetime Event</h2>
-                <button id="close-modal-btn" class="p-2 rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
-                </button>
-            </div>
-            
-            <form id="add-event-form" class="p-6 space-y-5 overflow-y-auto no-scrollbar flex-1">
-                <input type="hidden" id="edit-event-id" value="">
-                
-                <div class="flex gap-4">
-                    <div class="w-1/3">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Year</label>
-                        <select id="year-select" name="year" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-gray-900 font-semibold focus:ring-2 focus:ring-amber-200 focus:border-amber-500 outline-none transition-all" required></select>
-                    </div>
-                    <div class="w-2/3">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Category</label>
-                        <select id="category-select" name="category" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-gray-900 font-semibold focus:ring-2 focus:ring-amber-200 focus:border-amber-500 outline-none transition-all" required>
-                            <option value="Photo">Photo</option>
-                            <option value="Trip">Trip</option>
-                            <option value="Place Lived">Place Lived</option>
-                            <option value="Job">Job</option>
-                            <option value="Special Event">Special Event</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Photo Upload Field -->
-                <div id="photo-upload-group" class="space-y-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Photo</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="event-photo-input" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-gray-500 px-4 text-center">
-                                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                                <p class="text-xs font-medium"><span class="font-semibold text-gray-700">Tap to upload photo</span> or select from device</p>
-                            </div>
-                            <input id="event-photo-input" type="file" accept="image/*" class="hidden" />
-                        </label>
-                    </div>
-                    <img id="photo-preview" class="hidden w-full h-44 object-cover rounded-xl mt-3 border border-gray-200 shadow-sm" alt="Preview">
-                </div>
-
-                <!-- Title Input with Mic & AI Polish -->
-                <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500">Title / Headline</label>
-                        <span class="text-[11px] text-gray-400 italic">Voice or type</span>
-                    </div>
-                    <div class="relative">
-                        <input type="text" id="input-title" name="title" placeholder="e.g., Software Engineer at TechCorp" class="w-full rounded-xl border border-gray-200 bg-gray-50 pl-3 pr-24 py-3 text-gray-900 focus:ring-2 focus:ring-amber-200 focus:border-amber-500 outline-none transition-all" required />
-                        <div class="absolute right-2 top-2 flex gap-1">
-                            <button type="button" class="mic-btn p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" data-target="input-title" title="Voice Dictation">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                            </button>
-                            <button type="button" class="polish-btn p-2 text-gray-400 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors" data-target="input-title" title="Correct Grammar with AI">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Description / Voice Note Input -->
-                <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-500">Details & Memories</label>
-                        <span class="text-[11px] text-gray-400 italic">Record voice notes</span>
-                    </div>
-                    <div class="relative">
-                        <textarea id="input-desc" name="description" rows="3" placeholder="Tell the story of this memory..." class="w-full rounded-xl border border-gray-200 bg-gray-50 pl-3 pr-24 py-3 text-gray-900 focus:ring-2 focus:ring-amber-200 focus:border-amber-500 outline-none transition-all resize-none"></textarea>
-                        <div class="absolute right-2 top-2 flex flex-col gap-1">
-                            <button type="button" class="mic-btn p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" data-target="input-desc" title="Voice Dictation">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                            </button>
-                            <button type="button" class="polish-btn p-2 text-gray-400 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors" data-target="input-desc" title="Correct Grammar with AI">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="ai-status" class="text-xs font-medium text-amber-700 hidden flex items-center gap-2 bg-amber-50 p-2.5 rounded-lg border border-amber-200">
-                    <div class="spinner border-t-amber-700"></div>
-                    Polishing grammar with AI...
-                </div>
-
-                <div class="pt-3 border-t border-gray-100 flex gap-3">
-                    <button type="button" id="delete-event-btn" class="hidden px-4 py-3.5 bg-red-50 text-red-600 hover:bg-red-100 font-semibold rounded-xl transition-colors">Delete</button>
-                    <button type="submit" id="submit-btn" class="flex-1 bg-gray-900 hover:bg-black text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-gray-200 transition-all active:scale-[0.98]">
-                        Save to Timeline
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Application Logic -->
-    <script>
-        const START_YEAR = 1970;
-        const CURRENT_YEAR = new Date().getFullYear();
-        const STORAGE_KEY = 'lifetime_line_events_v2';
-
-        const SAMPLE_EVENTS = [
-            { id: 'sample-1', year: 1995, category: 'Place Lived', title: 'Moved to San Francisco, CA', description: 'Started a brand new chapter on the West Coast with two suitcases.', createdAt: new Date().toISOString() },
-            { id: 'sample-2', year: 1998, category: 'Job', title: 'Senior Software Developer at Innovate Inc.', description: 'Led the core engineering team building web applications.', createdAt: new Date().toISOString() },
-            { id: 'sample-3', year: 2005, category: 'Trip', title: 'Trip to Kyoto, Japan', description: 'Explored ancient temples, bamboo forests, and traditional tea houses during cherry blossom season.', createdAt: new Date().toISOString() },
-            { id: 'sample-4', year: 2012, category: 'Special Event', title: 'Married Sarah in Napa Valley', description: 'An unforgettable outdoor ceremony surrounded by close family and friends.', createdAt: new Date().toISOString() }
-        ];
-
-        let timelineEvents = [];
-        let currentPhotoBase64 = null;
-        let isBookMode = false;
-
-        const CAT_CONFIG = {
-            'Photo': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-800', icon: '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' },
-            'Trip': { bg: 'bg-sky-50', border: 'border-sky-200', text: 'text-sky-800', icon: '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>' },
-            'Place Lived': { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-800', icon: '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' },
-            'Job': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800', icon: '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>' },
-            'Special Event': { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-800', icon: '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>' }
-        };
-
-        // DOM Elements
-        const DOM = {
-            yearSelect: document.getElementById('year-select'),
-            catSelect: document.getElementById('category-select'),
-            photoGroup: document.getElementById('photo-upload-group'),
-            photoInput: document.getElementById('event-photo-input'),
-            photoPreview: document.getElementById('photo-preview'),
-            timelineContainer: document.getElementById('timeline-container'),
-            emptyState: document.getElementById('empty-state'),
-            addModal: document.getElementById('add-modal'),
-            openModalBtn: document.getElementById('open-modal-btn'),
-            closeModalBtn: document.getElementById('close-modal-btn'),
-            addEventForm: document.getElementById('add-event-form'),
-            aiStatus: document.getElementById('ai-status'),
-            submitBtn: document.getElementById('submit-btn'),
-            modalTitle: document.getElementById('modal-title'),
-            editEventId: document.getElementById('edit-event-id'),
-            deleteEventBtn: document.getElementById('delete-event-btn'),
-            bookViewBtn: document.getElementById('book-view-btn'),
-            bookBtnText: document.getElementById('book-btn-text'),
-            clearDataBtn: document.getElementById('clear-data-btn')
-        };
-
-        // Initialize Year Select options
-        for (let y = CURRENT_YEAR; y >= START_YEAR; y--) {
-            const opt = document.createElement('option');
-            opt.value = y; opt.textContent = y;
-            DOM.yearSelect.appendChild(opt);
-        }
-
-        // Load data from localStorage
-        function loadEvents() {
-            try {
-                const data = localStorage.getItem(STORAGE_KEY);
-                if (data) {
-                    timelineEvents = JSON.parse(data);
-                } else {
-                    timelineEvents = SAMPLE_EVENTS;
-                    saveEvents();
-                }
-            } catch (e) {
-                console.error("Storage read error:", e);
-                timelineEvents = SAMPLE_EVENTS;
-            }
-            renderTimeline();
-        }
-
-        function saveEvents() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(timelineEvents));
-            } catch (e) {
-                console.error("Storage write error (maybe photo too large):", e);
-                alert("Storage error: The photo file might be too large. Try a smaller image.");
-            }
-        }
-
-        // Category change listener
-        DOM.catSelect.addEventListener('change', (e) => {
-            if (e.target.value === 'Photo') {
-                DOM.photoGroup.classList.remove('hidden');
-            } else {
-                DOM.photoGroup.classList.add('hidden');
-                DOM.photoInput.value = '';
-                DOM.photoPreview.classList.add('hidden');
-                currentPhotoBase64 = null;
-            }
-        });
-
-        // Photo file reader & compressor
-        DOM.photoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const MAX = 900;
-                    let w = img.width, h = img.height;
-                    if (w > h && w > MAX) { h *= MAX / w; w = MAX; }
-                    else if (h > MAX) { w *= MAX / h; h = MAX; }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.82);
-                    DOM.photoPreview.src = currentPhotoBase64;
-                    DOM.photoPreview.classList.remove('hidden');
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Render Timeline with smart continuity
-        function renderTimeline() {
-            DOM.timelineContainer.innerHTML = '';
-            
-            if (timelineEvents.length === 0) {
-                DOM.emptyState.classList.remove('hidden');
-                return;
-            }
-            DOM.emptyState.classList.add('hidden');
-
-            let activeJob = null;
-            let activePlace = null;
-            const chronologicalData = [];
-
-            // Compute continuity year by year from START_YEAR to CURRENT_YEAR
-            for (let y = START_YEAR; y <= CURRENT_YEAR; y++) {
-                const yearEvents = timelineEvents.filter(e => parseInt(e.year) === y);
-                
-                const jobEvents = yearEvents.filter(e => e.category === 'Job');
-                if (jobEvents.length > 0) activeJob = jobEvents[jobEvents.length - 1];
-
-                const placeEvents = yearEvents.filter(e => e.category === 'Place Lived');
-                if (placeEvents.length > 0) activePlace = placeEvents[placeEvents.length - 1];
-
-                if (yearEvents.length > 0 || activeJob || activePlace) {
-                    chronologicalData.push({
-                        year: y,
-                        events: yearEvents,
-                        persistentJob: activeJob,
-                        persistentPlace: activePlace
-                    });
-                }
-            }
-
-            // Reverse chronological order (newest on top)
-            chronologicalData.reverse().forEach(block => {
-                const yearDiv = document.createElement('div');
-                yearDiv.className = 'relative pl-8 sm:pl-14';
-
-                // Year marker bubble
-                let yearHtml = `
-                    <div class="absolute -left-[23px] sm:-left-[27px] top-0 w-12 h-12 sm:w-14 sm:h-14 bg-white border-4 border-amber-900/10 rounded-full flex items-center justify-center z-10 shadow-sm">
-                        <span class="font-serif font-bold text-gray-800 text-base sm:text-lg">${block.year}</span>
-                    </div>
-                `;
-
-                // Smart continuity badges
-                let badgesHtml = '';
-                if (block.persistentPlace || block.persistentJob) {
-                    badgesHtml += '<div class="flex flex-wrap gap-2 mb-4 pt-1">';
-                    if (block.persistentPlace) {
-                        badgesHtml += `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-800 border border-orange-200 text-xs font-semibold shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                            Home: ${escapeHTML(block.persistentPlace.title)}
-                        </span>`;
-                    }
-                    if (block.persistentJob) {
-                        badgesHtml += `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200 text-xs font-semibold shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            Role: ${escapeHTML(block.persistentJob.title)}
-                        </span>`;
-                    }
-                    badgesHtml += '</div>';
-                }
-
-                // Event cards
-                let cardsHtml = '<div class="space-y-4">';
-                block.events.forEach(ev => {
-                    const theme = CAT_CONFIG[ev.category] || CAT_CONFIG['Special Event'];
-                    let imgTag = ev.photoData ? `<img src="${ev.photoData}" class="w-full h-auto max-h-72 object-cover rounded-xl mb-4 border border-gray-100 shadow-sm" alt="Event photo">` : '';
-                    
-                    cardsHtml += `
-                        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200/80 relative hover:shadow-md transition-all group cursor-pointer event-card" data-id="${ev.id}">
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center gap-2">
-                                    <div class="p-1.5 rounded-xl ${theme.bg} ${theme.text} border ${theme.border}">${theme.icon}</div>
-                                    <span class="text-xs font-bold uppercase tracking-widest text-gray-400">${ev.category}</span>
-                                </div>
-                                <span class="text-xs text-gray-300 group-hover:text-gray-500 transition-colors">Edit</span>
-                            </div>
-                            ${imgTag}
-                            <h3 class="text-lg sm:text-xl font-serif font-bold text-gray-900 mb-1.5 leading-snug">${escapeHTML(ev.title)}</h3>
-                            ${ev.description ? `<p class="text-gray-600 text-sm leading-relaxed">${escapeHTML(ev.description)}</p>` : ''}
-                        </div>
-                    `;
-                });
-                cardsHtml += '</div>';
-
-                yearDiv.innerHTML = yearHtml + badgesHtml + cardsHtml;
-                DOM.timelineContainer.appendChild(yearDiv);
-            });
-
-            // Bind click events to edit cards
-            document.querySelectorAll('.event-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const id = card.getAttribute('data-id');
-                    openEditModal(id);
-                });
-            });
-        }
-
-        // Voice Dictation setup using Web Speech API
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition = null;
-        let activeInput = null;
-        let activeMicButton = null;
-        let originalInputValue = '';
-
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'en-US';
-
-            recognition.onresult = (e) => {
-                if (!activeInput) return;
-                let transcript = '';
-                for (let i = e.resultIndex; i < e.results.length; ++i) {
-                    transcript += e.results[i][0].transcript;
-                }
-                activeInput.value = originalInputValue + (originalInputValue ? ' ' : '') + transcript;
-            };
-
-            recognition.onend = () => {
-                if (activeMicButton) activeMicButton.classList.remove('recording-active');
-                activeInput = null;
-                activeMicButton = null;
-            };
-        }
-
-        document.querySelectorAll('.mic-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (!recognition) {
-                    alert("Voice dictation is not supported in this browser. Please use Chrome or Safari.");
-                    return;
-                }
-                const targetId = btn.getAttribute('data-target');
-                const targetEl = document.getElementById(targetId);
-
-                if (activeMicButton === btn) {
-                    recognition.stop();
-                    return;
-                }
-                if (activeMicButton) recognition.stop();
-
-                activeInput = targetEl;
-                activeMicButton = btn;
-                originalInputValue = targetEl.value.trim();
-                btn.classList.add('recording-active');
-                try { recognition.start(); } catch(err) { console.error(err); }
-            });
-        });
-
-        // Gemini AI Grammar & Spelling Polish
-        document.querySelectorAll('.polish-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const targetId = btn.getAttribute('data-target');
-                const targetEl = document.getElementById(targetId);
-                const text = targetEl.value.trim();
-                if (!text) return;
-
-                btn.classList.add('animate-pulse', 'text-amber-700');
-                DOM.aiStatus.classList.remove('hidden');
-
-                try {
-                    const payload = {
-                        contents: [{
-                            parts: [{ text: `Correct spelling, grammar, and punctuation for this lifetime memoir note. Return ONLY the polished text without any introduction or formatting:\n\n"${text}"` }]
-                        }]
-                    };
-                    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!res.ok) throw new Error("API request failed");
-                    const data = await res.json();
-                    const polished = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-                    if (polished) targetEl.value = polished;
-                } catch (err) {
-                    console.error("Gemini polish error:", err);
-                    alert("Could not reach AI assistant. Check your internet connection.");
-                } finally {
-                    btn.classList.remove('animate-pulse', 'text-amber-700');
-                    DOM.aiStatus.classList.add('hidden');
-                }
-            });
-        });
-
-        // Modal Controls
-        function openAddModal() {
-            DOM.editEventId.value = '';
-            DOM.modalTitle.textContent = "Add Lifetime Event";
-            DOM.addEventForm.reset();
-            DOM.yearSelect.value = CURRENT_YEAR;
-            DOM.photoGroup.classList.add('hidden');
-            DOM.photoPreview.classList.add('hidden');
-            currentPhotoBase64 = null;
-            DOM.deleteEventBtn.classList.add('hidden');
-            DOM.addModal.classList.remove('hidden');
-        }
-
-        function openEditModal(id) {
-            const ev = timelineEvents.find(item => item.id === id);
-            if (!ev) return;
-
-            DOM.editEventId.value = ev.id;
-            DOM.modalTitle.textContent = "Edit Lifetime Event";
-            document.getElementById('year-select').value = ev.year;
-            document.getElementById('category-select').value = ev.category;
-            document.getElementById('input-title').value = ev.title || '';
-            document.getElementById('input-desc').value = ev.description || '';
-            
-            if (ev.category === 'Photo' && ev.photoData) {
-                currentPhotoBase64 = ev.photoData;
-                DOM.photoPreview.src = ev.photoData;
-                DOM.photoPreview.classList.remove('hidden');
-                DOM.photoGroup.classList.remove('hidden');
-            } else {
-                DOM.photoGroup.classList.add('hidden');
-                currentPhotoBase64 = null;
-            }
-
-            DOM.deleteEventBtn.classList.remove('hidden');
-            DOM.addModal.classList.remove('hidden');
-        }
-
-        DOM.openModalBtn.addEventListener('click', openAddModal);
-        DOM.closeModalBtn.addEventListener('click', () => {
-            if (recognition && activeMicButton) recognition.stop();
-            DOM.addModal.classList.add('hidden');
-        });
-
-        // Form Submit (Add or Edit)
-        DOM.addEventForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (recognition && activeMicButton) recognition.stop();
-
-            const editId = DOM.editEventId.value;
-            const category = document.getElementById('category-select').value;
-            const eventObj = {
-                id: editId || 'ev_' + Date.now() + Math.random().toString(36).substr(2, 5),
-                year: parseInt(document.getElementById('year-select').value),
-                category: category,
-                title: document.getElementById('input-title').value.trim(),
-                description: document.getElementById('input-desc').value.trim(),
-                createdAt: new Date().toISOString()
-            };
-
-            if (category === 'Photo' && currentPhotoBase64) {
-                eventObj.photoData = currentPhotoBase64;
-            }
-
-            if (editId) {
-                const idx = timelineEvents.findIndex(item => item.id === editId);
-                if (idx !== -1) {
-                    if (!eventObj.photoData && timelineEvents[idx].photoData) {
-                        eventObj.photoData = timelineEvents[idx].photoData; // retain photo if not changed
-                    }
-                    timelineEvents[idx] = eventObj;
-                }
-            } else {
-                timelineEvents.push(eventObj);
-            }
-
-            saveEvents();
-            renderTimeline();
-            DOM.addModal.classList.add('hidden');
-        });
-
-        // Delete Event
-        DOM.deleteEventBtn.addEventListener('click', () => {
-            const editId = DOM.editEventId.value;
-            if (!editId) return;
-            if (confirm("Are you sure you want to delete this memory?")) {
-                timelineEvents = timelineEvents.filter(item => item.id !== editId);
-                saveEvents();
-                renderTimeline();
-                DOM.addModal.classList.add('hidden');
-            }
-        });
-
-        // Book View / Print mode toggle
-        DOM.bookViewBtn.addEventListener('click', () => {
-            isBookMode = !isBookMode;
-            const container = document.body;
-            if (isBookMode) {
-                container.classList.add('print-book-mode');
-                DOM.bookBtnText.textContent = "Exit Book View";
-                window.print();
-            } else {
-                container.classList.remove('print-book-mode');
-                DOM.bookBtnText.textContent = "Book View";
-            }
-        });
-
-        DOM.clearDataBtn.addEventListener('click', () => {
-            if (confirm("Reset all timeline events to defaults?")) {
-                localStorage.removeItem(STORAGE_KEY);
-                loadEvents();
-            }
-        });
-
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])
-            );
-        }
-
-        // Initial Load
-        loadEvents();
-    </script>
+<body>
+<div class="shell">
+<header class="hero">
+ <div class="brand"><div class="logo" aria-hidden="true">✦</div><div><div class="eyebrow">A personal archive</div><h1>My Life in Chapters</h1><p>People, places, journeys, and moments that made me.</p></div></div>
+ <button class="primary" id="addTop">＋ Add memory</button>
+</header>
+<div class="layout">
+ <aside class="sidebar">
+  <div class="side-title">Jump to a year</div>
+  <div class="year-tools"><input id="yearJump" type="number" min="1900" max="2100" placeholder="Enter year" aria-label="Jump to year"><button class="secondary" id="jumpBtn">Go</button></div>
+  <div class="year-list" id="yearList" aria-label="Timeline years"></div>
+  <div class="privacy-note"><strong>Your memories matter.</strong><br>This starter version stores entries in this browser on this device. Export backups regularly. It does not sync automatically between devices.</div>
+ </aside>
+ <main>
+  <div class="toolbar"><h2 id="viewTitle">Your timeline</h2><div class="filters"><input class="search" id="search" placeholder="Search memories…" aria-label="Search memories"><select id="typeFilter" aria-label="Filter by type"><option value="all">All memories</option><option>Photo</option><option>Job</option><option>Home</option><option>Person</option><option>Event</option><option>Trip</option><option>Milestone</option><option>Other</option></select></div></div>
+  <div class="year-intro"><strong id="yearHeading">Every year tells a story.</strong><span id="yearSub">Choose a year or browse your memories below.</span></div>
+  <div class="timeline" id="timeline"></div>
+  <div class="footer">Made for remembering · Use “Export backup” to keep a copy of your archive.</div>
+ </main>
+</div>
+</div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+ <div class="dialog">
+  <div class="dialog-head"><h2 id="formTitle">Add a memory</h2><button class="close" id="closeModal" aria-label="Close">×</button></div>
+  <form id="memoryForm">
+   <div class="form-grid">
+    <div class="field"><label for="kind">What are you adding?</label><select id="kind" required><option>Photo</option><option>Job</option><option>Home</option><option>Person</option><option>Event</option><option>Trip</option><option>Milestone</option><option>Other</option></select></div>
+    <div class="field"><label for="title">Title</label><input id="title" required placeholder="e.g. First day at a new job"></div>
+    <div class="field"><label for="startYear">Year it began / happened</label><div class="year-pick"><button type="button" id="yearDown" aria-label="Previous year">−</button><input id="startYear" type="number" min="1900" max="2100" required><button type="button" id="yearUp" aria-label="Next year">＋</button></div></div>
+    <div class="field"><label for="endYear">Year it ended (optional)</label><input id="endYear" type="number" min="1900" max="2100" placeholder="Leave blank if ongoing"><span class="hint">For jobs or homes, blank means it continues to the present.</span></div>
+    <div class="field full"><label for="place">Place / address / people (optional)</label><input id="place" placeholder="City, address, workplace, or people involved"></div>
+    <div class="field full"><label for="story">Your story</label><textarea id="story" placeholder="Write a memory, or use the microphone below to tell it in your own words."></textarea><span class="hint">Speech-to-text uses your browser’s speech recognition when supported. Review the transcript before saving.</span></div>
+    <div class="field full"><label for="photo">Photo (optional)</label><input id="photo" type="file" accept="image/*"><span class="hint" id="photoHint">Choose a picture from your phone or computer. Large photos use more browser storage.</span><img id="photoPreview" alt="Selected photo preview" style="display:none;max-width:100%;max-height:180px;object-fit:contain;border-radius:10px"></div>
+    <div class="field full"><label>Voice recording (optional)</label><div class="voice-controls"><button type="button" class="secondary" id="speechBtn">🎙 Dictate story</button><button type="button" class="secondary" id="recordBtn">● Record voice</button><button type="button" class="secondary" id="stopBtn" disabled>Stop recording</button></div><span class="hint" id="voiceStatus">Dictation fills the story text. Voice recording saves audio separately when your browser supports it.</span><audio id="audioPreview" controls style="display:none;width:100%;margin-top:8px"></audio></div>
+   </div>
+   <div class="form-actions"><button type="button" class="danger" id="deleteBtn" style="display:none">Delete memory</button><div class="form-actions-right"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button class="primary" type="submit">Save memory</button></div></div>
+  </form>
+ </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const DB_NAME='life-in-chapters-db', STORE='memories', LEGACY='life-in-chapters-v1';
+let memories=[], selectedYear=null, editingId=null, photoData='', audioBlob=null, audioUrl='', mediaRecorder=null, audioChunks=[], recognition=null, db=null;
+const currentYear=new Date().getFullYear();
+function uid(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function notify(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2800)}
+function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+function dbAll(){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
+function dbPut(item){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).put(item);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
+function dbDelete(id){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
+function saveFallback(){try{localStorage.setItem(LEGACY,JSON.stringify(memories.filter(m=>!m.photo&&!m.audioData)))}catch(e){}}
+function yearsForMemory(m){let end=Number(m.endYear)||currentYear;end=Math.min(currentYear,Math.max(Number(m.year),end));const arr=[];for(let y=Number(m.year);y<=end;y++)arr.push(y);return arr}
+function displayYears(){const set=new Set();for(let y=1900;y<=currentYear;y++)set.add(y);memories.forEach(m=>yearsForMemory(m).forEach(y=>set.add(y)));return [...set].sort((a,b)=>b-a)}
+function renderYears(){const ys=displayYears();$('yearList').innerHTML=ys.map(y=>`<button class="year-btn ${selectedYear===y?'active':''}" data-year="${y}"><span>${y}</span><small>${memories.filter(m=>yearsForMemory(m).includes(y)).length||''}</small></button>`).join('');$('yearList').querySelectorAll('[data-year]').forEach(b=>b.addEventListener('click',()=>{selectedYear=Number(b.dataset.year);render()}))}
+function render(){renderYears();const query=$('search').value.trim().toLowerCase(),filter=$('typeFilter').value;let list=memories.filter(m=>(selectedYear===null||yearsForMemory(m).includes(selectedYear))&&(filter==='all'||m.kind===filter)&&(!query||[m.title,m.place,m.story,m.kind].join(' ').toLowerCase().includes(query)));list.sort((a,b)=>Number(b.year)-Number(a.year)||String(b.createdAt).localeCompare(String(a.createdAt)));$('viewTitle').textContent=selectedYear?`Memories from ${selectedYear}`:'Your timeline';$('yearHeading').textContent=selectedYear?`Chapter ${selectedYear}`:'Every year tells a story.';$('yearSub').textContent=selectedYear?`${list.length} ${list.length===1?'memory':'memories'} shown · Ongoing jobs and homes appear in each year they cover.`:'Pick a year to jump through your life, or search all your memories.';if(!list.length){$('timeline').innerHTML='<div class="empty"><strong>No memories here yet.</strong>Add a photo, a person, a place you lived, a job, a trip, or a moment you want to keep.</div>';return}
+$('timeline').innerHTML=list.map(m=>{const span=(Number(m.endYear)&&Number(m.endYear)>Number(m.year))?`${m.year} – ${m.endYear}`:`${m.year}`;return `<article class="entry"><div class="entry-head"><div><span class="entry-type">${iconFor(m.kind)} ${escapeHtml(m.kind)}</span><h3>${escapeHtml(m.title)}</h3><div class="entry-meta">${span}${m.place?' · '+escapeHtml(m.place):''}</div></div><div class="entry-actions"><button class="icon-btn" data-edit="${m.id}" aria-label="Edit ${escapeHtml(m.title)}">Edit</button><button class="icon-btn" data-print="${m.id}" aria-label="Print ${escapeHtml(m.title)}">Print</button></div></div>${m.story?`<p>${escapeHtml(m.story)}</p>`:''}${m.photo?`<img class="entry-photo" src="${m.photo}" alt="${escapeHtml(m.title)}">`:''}${m.audioData?`<div class="voice-box"><div class="voice-label">🔊 Original voice recording</div><audio controls preload="none" src="${m.audioData}"></audio></div>`:''}</article>`}).join('');
+$('timeline').querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editMemory(b.dataset.edit)));$('timeline').querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>printMemory(b.dataset.print)))}
+function iconFor(k){return ({Photo:'▧',Job:'▣',Home:'⌂',Person:'♡',Event:'✦',Trip:'➶',Milestone:'✧',Other:'✎'})[k]||'✎'}
+function openForm(m=null){editingId=m?.id||null;photoData=m?.photo||'';audioBlob=null;audioUrl='';$('memoryForm').reset();$('formTitle').textContent=m?'Edit memory':'Add a memory';$('kind').value=m?.kind||'Photo';$('title').value=m?.title||'';$('startYear').value=m?.year||selectedYear||currentYear;$('endYear').value=m?.endYear||'';$('place').value=m?.place||'';$('story').value=m?.story||'';$('photo').value='';$('photoPreview').style.display=photoData?'block':'none';$('photoPreview').src=photoData||'';$('audioPreview').style.display=m?.audioData?'block':'none';$('audioPreview').src=m?.audioData||'';$('deleteBtn').style.display=m?'inline-block':'none';$('modal').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>$('title').focus(),50)}
+function closeForm(){$('modal').classList.remove('open');document.body.style.overflow='';if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl='';if(recognition){try{recognition.stop()}catch(e){}recognition=null}}
+function editMemory(id){const m=memories.find(x=>x.id===id);if(m)openForm(m)}
+function fileToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+$('photo').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;if(f.size>7*1024*1024){notify('That photo is over 7 MB. Choose a smaller image for this browser-only version.');e.target.value='';return}try{photoData=await fileToData(f);$('photoPreview').src=photoData;$('photoPreview').style.display='block'}catch(err){notify('Could not load that photo.')}});
+$('yearDown').onclick=()=>$('startYear').stepDown();$('yearUp').onclick=()=>$('startYear').stepUp();
+$('addTop').onclick=()=>openForm();$('closeModal').onclick=closeForm;$('cancelBtn').onclick=closeForm;$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeForm()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal').classList.contains('open'))closeForm()});
+$('jumpBtn').onclick=()=>{const y=Number($('yearJump').value);if(y>=1900&&y<=2100){selectedYear=y;render()}else notify('Enter a year between 1900 and 2100.')};$('yearJump').addEventListener('keydown',e=>{if(e.key==='Enter')$('jumpBtn').click()});$('search').addEventListener('input',render);$('typeFilter').addEventListener('change',render);
+$('speechBtn').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){notify('Speech-to-text is not supported in this browser. Try Chrome.');return}if(recognition){try{recognition.stop()}catch(e){}recognition=null;$('speechBtn').textContent='🎙 Dictate story';return}recognition=new SR();recognition.lang=navigator.language||'en-US';recognition.continuous=true;recognition.interimResults=true;const existing=$('story').value.trim();$('speechBtn').textContent='■ Stop dictation';$('voiceStatus').textContent='Listening… speak naturally. Check the text for accuracy when finished.';recognition.onresult=e=>{let final='',interim='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript+' ';else interim+=e.results[i][0].transcript}const base=existing?existing+' ':'';$('story').value=base+final+interim};recognition.onerror=e=>{$('voiceStatus').textContent='Dictation stopped ('+e.error+'). Your text remains in the box.'};recognition.onend=()=>{$('speechBtn').textContent='🎙 Dictate story';$('voiceStatus').textContent='Dictation ended. Review and edit the transcript before saving.';recognition=null};try{recognition.start()}catch(e){notify('Could not start speech recognition.')}}; 
+$('recordBtn').onclick=async()=>{if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){notify('Voice recording is not supported in this browser.');return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});audioChunks=[];mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>{if(e.data.size)audioChunks.push(e.data)};mediaRecorder.onstop=()=>{audioBlob=new Blob(audioChunks,{type:mediaRecorder.mimeType||'audio/webm'});if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=URL.createObjectURL(audioBlob);$('audioPreview').src=audioUrl;$('audioPreview').style.display='block';$('voiceStatus').textContent='Recording ready. Save the memory to keep this recording.';stream.getTracks().forEach(t=>t.stop());$('recordBtn').disabled=false;$('stopBtn').disabled=true};mediaRecorder.start();$('recordBtn').disabled=true;$('stopBtn').disabled=false;$('voiceStatus').textContent='Recording…';}catch(e){notify('Microphone access was denied or unavailable.')}};$('stopBtn').onclick=()=>{if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop()};
+$('memoryForm').addEventListener('submit',async e=>{e.preventDefault();const year=Number($('startYear').value),endYear=Number($('endYear').value)||null;if(year<1900||year>2100||endYear&&(endYear<year||endYear>2100)){notify('Check the start and end years.');return}const old=memories.find(m=>m.id===editingId);const submit=e.submitter;submit.disabled=true;submit.textContent='Saving…';try{const audioData=audioBlob?await fileToData(audioBlob):(old?.audioData||'');const m={id:editingId||uid(),kind:$('kind').value,title:$('title').value.trim(),year,endYear,place:$('place').value.trim(),story:$('story').value.trim(),photo:photoData||'',audioData,createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};if(!m.title)throw new Error('Add a title first.');if(db){await dbPut(m)}const idx=memories.findIndex(x=>x.id===m.id);if(idx>=0)memories[idx]=m;else memories.push(m);saveFallback();selectedYear=year;closeForm();render();notify('Memory saved to your timeline.')}catch(err){notify(err.message||'Could not save. Your browser storage may be full.')}finally{submit.disabled=false;submit.textContent='Save memory'}});
+$('deleteBtn').onclick=async()=>{if(!editingId||!confirm('Delete this memory permanently from this browser?'))return;try{if(db)await dbDelete(editingId);memories=memories.filter(m=>m.id!==editingId);saveFallback();closeForm();render();notify('Memory deleted.')}catch(e){notify('Could not delete this memory.')}};
+function printMemory(id){const m=memories.find(x=>x.id===id);if(!m)return;const w=window.open('','_blank');if(!w){notify('Allow pop-ups to print a memory.');return}w.document.write('<!doctype html><html><head><title>'+escapeHtml(m.title)+'</title><meta charset="utf-8"><style>body{font:16px/1.6 Georgia,serif;max-width:760px;margin:40px auto;padding:0 20px;color:#222}h1{font-weight:normal}small{color:#666}img{max-width:100%;max-height:480px;object-fit:contain}p{white-space:pre-wrap}audio{width:100%}</style></head><body><h1>'+escapeHtml(m.title)+'</h1><small>'+m.year+(m.endYear?' – '+m.endYear:'')+' · '+escapeHtml(m.kind)+(m.place?' · '+escapeHtml(m.place):'')+'</small>'+(m.photo?'<p><img src="'+m.photo+'"></p>':'')+'<p>'+escapeHtml(m.story).replace(/\n/g,'<br>')+'</p>'+(m.audioData?'<p>Original voice recording is saved in the app. It may not be included in a printed copy.</p>':'')+'<script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>');w.document.close()}
+$('memoryForm').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.type!=='file')return});
+async function exportBackup(){try{const payload={app:'My Life in Chapters',version:1,exportedAt:new Date().toISOString(),memories};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-life-in-chapters-backup.json';a.click();URL.revokeObjectURL(a.href);notify('Backup downloaded. Keep it somewhere safe.')}catch(e){notify('Could not export backup.')}}
+async function importBackup(file){try{const data=JSON.parse(await file.text());if(!Array.isArray(data.memories))throw new Error('This does not look like a valid backup.');if(!confirm(`Import ${data.memories.length} memories? Existing memories with matching IDs will be replaced.`))return;for(const m of data.memories){if(db)await dbPut(m);const i=memories.findIndex(x=>x.id===m.id);if(i>=0)memories[i]=m;else memories.push(m)}saveFallback();render();notify('Backup imported.')}catch(e){notify(e.message||'Could not import backup.')}}
+const backupBtn=document.createElement('button');backupBtn.className='secondary';backupBtn.textContent='Export backup';backupBtn.style.marginTop='9px';backupBtn.style.width='100%';backupBtn.onclick=exportBackup;$('yearList').after(backupBtn);
+const importLabel=document.createElement('label');importLabel.className='secondary';importLabel.style.cssText='display:block;text-align:center;margin-top:7px;cursor:pointer';importLabel.textContent='Import backup';const importInput=document.createElement('input');importInput.type='file';importInput.accept='.json,application/json';importInput.style.display='none';importInput.onchange=()=>{if(importInput.files[0])importBackup(importInput.files[0]);importInput.value=''};importLabel.append(importInput);backupBtn.after(importLabel);
+async function init(){try{db=await openDB();if(db)memories=await dbAll();else throw new Error('No IndexedDB')}catch(e){try{memories=JSON.parse(localStorage.getItem(LEGACY)||'[]')}catch(err){memories=[]}notify('Using limited browser storage. Export backups often.')}render()}
+init();
+})();
+</script>
 </body>
 </html>
-```
