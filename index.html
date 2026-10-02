@@ -1,0 +1,510 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lifetime Line</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Recording pulse animation */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+        .animate-pulse-ring::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            border: 3px solid #ef4444;
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        
+        /* Simple modal animation */
+        .modal-enter { animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="pb-32">
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-200 px-4 py-4 sm:px-6 shadow-sm flex justify-between items-center">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Lifetime Line</h1>
+        <div class="flex items-center gap-3">
+            <button id="toggle-voice-btn" class="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold transition-all bg-white text-gray-600 border border-gray-300 hover:bg-gray-100 shadow-sm">
+                <!-- Mic Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                <span class="hidden sm:inline" id="voice-mode-text">Voice Mode: OFF</span>
+            </button>
+            
+            <button class="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-black shadow-sm transition-colors">
+                <!-- Book Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+                <span class="hidden sm:inline">Export Book</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Timeline Container -->
+    <main class="max-w-3xl mx-auto mt-8 px-4 sm:px-6 relative">
+        <div id="empty-state" class="flex flex-col items-center justify-center mt-32 text-center hidden">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your timeline is empty</h2>
+            <p class="text-gray-500 max-w-md">Start documenting your life by adding places you've lived, jobs, trips, and special memories.</p>
+        </div>
+
+        <div id="timeline-container" class="relative border-l-2 border-gray-200 ml-4 sm:ml-6 space-y-12 pb-12 hidden">
+            <!-- Timeline events injected here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button id="open-modal-btn" class="fixed bottom-8 right-8 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 z-40">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+    </button>
+
+    <!-- Add Event Modal -->
+    <div id="add-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden modal-enter">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h2 class="text-xl font-bold text-gray-900">Add to Timeline</h2>
+                <button id="close-modal-btn" class="p-2 rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <form id="add-event-form" class="p-6 space-y-5">
+                <div class="flex gap-4">
+                    <div class="w-1/3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Year</label>
+                        <select id="year-select" name="year" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm" required>
+                            <!-- Options injected by JS -->
+                        </select>
+                    </div>
+                    
+                    <div class="w-2/3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Category</label>
+                        <select name="category" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm" required>
+                            <option value="Photo">Photo</option>
+                            <option value="Trip">Trip</option>
+                            <option value="Place Lived">Place Lived</option>
+                            <option value="Job">Job</option>
+                            <option value="Special Event">Special Event</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Title</label>
+                    <input type="text" name="title" placeholder="e.g., Graduated College, Moved to Austin" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm" required />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Brief Details (Optional)</label>
+                    <textarea name="description" rows="3" placeholder="A short note about this event..." class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-[0.98] mt-2">
+                    Save to Timeline
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration & Application Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'lifetime-line-dev';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        
+        let db, auth, currentUser = null;
+        let timelineEvents = [];
+        let isVoiceMode = false;
+        let recordingEventId = null;
+        let recognition = null;
+
+        const START_YEAR = 1974;
+        const CURRENT_YEAR = new Date().getFullYear();
+
+        // Icon helper mappings
+        const ICONS = {
+            'Photo': '<svg class="w-4 h-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>',
+            'Trip': '<svg class="w-4 h-4 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>',
+            'Place Lived': '<svg class="w-4 h-4 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>',
+            'Job': '<svg class="w-4 h-4 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>',
+            'Special Event': '<svg class="w-4 h-4 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>'
+        };
+
+        const BG_COLORS = {
+            'Photo': 'bg-blue-100', 'Trip': 'bg-green-100', 'Place Lived': 'bg-orange-100', 'Job': 'bg-purple-100', 'Special Event': 'bg-pink-100'
+        };
+
+        const DOM = {
+            yearSelect: document.getElementById('year-select'),
+            timelineContainer: document.getElementById('timeline-container'),
+            emptyState: document.getElementById('empty-state'),
+            addModal: document.getElementById('add-modal'),
+            openModalBtn: document.getElementById('open-modal-btn'),
+            closeModalBtn: document.getElementById('close-modal-btn'),
+            addEventForm: document.getElementById('add-event-form'),
+            toggleVoiceBtn: document.getElementById('toggle-voice-btn'),
+            voiceModeText: document.getElementById('voice-mode-text')
+        };
+
+        // Populate Year Spinner (Current Year down to 1974)
+        for (let y = CURRENT_YEAR; y >= START_YEAR; y--) {
+            const option = document.createElement('option');
+            option.value = y;
+            option.textContent = y;
+            DOM.yearSelect.appendChild(option);
+        }
+
+        if (Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            const authenticate = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Authentication failed:", error);
+                }
+            };
+
+            authenticate();
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) setupFirestoreListener();
+            });
+        }
+
+        function setupFirestoreListener() {
+            // Strict Path Rule enforced: /artifacts/{appId}/users/{userId}/timelineEvents
+            const eventsRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'timelineEvents');
+            
+            onSnapshot(eventsRef, (snapshot) => {
+                timelineEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderTimeline();
+            }, (error) => {
+                console.error("Firestore snapshot error:", error);
+            });
+        }
+
+        function renderTimeline() {
+            if (timelineEvents.length === 0) {
+                DOM.emptyState.classList.remove('hidden');
+                DOM.timelineContainer.classList.add('hidden');
+                return;
+            }
+
+            DOM.emptyState.classList.add('hidden');
+            DOM.timelineContainer.classList.remove('hidden');
+            DOM.timelineContainer.innerHTML = '';
+
+            let activeJob = null;
+            let activePlace = null;
+            const chronologicalData = [];
+
+            // Process forward from 1974 to current year to establish active states
+            for (let y = START_YEAR; y <= CURRENT_YEAR; y++) {
+                const yearEvents = timelineEvents.filter(e => parseInt(e.year) === y);
+                
+                // Update persistent states (using the latest one added in that year if multiple)
+                const jobEvents = yearEvents.filter(e => e.category === 'Job');
+                if (jobEvents.length > 0) activeJob = jobEvents[jobEvents.length - 1];
+
+                const placeEvents = yearEvents.filter(e => e.category === 'Place Lived');
+                if (placeEvents.length > 0) activePlace = placeEvents[placeEvents.length - 1];
+
+                // If there are events this year OR an active state exists, keep this year block
+                if (yearEvents.length > 0 || activeJob || activePlace) {
+                    chronologicalData.push({
+                        year: y,
+                        events: yearEvents,
+                        persistentJob: activeJob,
+                        persistentPlace: activePlace
+                    });
+                }
+            }
+
+            // Render in reverse chronological order (newest first)
+            const displayData = chronologicalData.reverse();
+
+            displayData.forEach(block => {
+                const yearBlock = document.createElement('div');
+                yearBlock.className = 'relative pl-8 sm:pl-12';
+
+                // Badges for Active States
+                let badgesHTML = '';
+                if (block.persistentPlace || block.persistentJob) {
+                    badgesHTML += `<div class="flex flex-wrap gap-2 mb-4 pt-1">`;
+                    if (block.persistentPlace) {
+                        badgesHTML += `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-200 text-xs font-semibold shadow-sm">${ICONS['Place Lived']} Lived in: ${escapeHTML(block.persistentPlace.title)}</span>`;
+                    }
+                    if (block.persistentJob) {
+                        badgesHTML += `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold shadow-sm">${ICONS['Job']} Worked as: ${escapeHTML(block.persistentJob.title)}</span>`;
+                    }
+                    badgesHTML += `</div>`;
+                }
+
+                // Events
+                let eventsHTML = '<div class="space-y-4">';
+                block.events.forEach(event => {
+                    const isRecording = recordingEventId === event.id;
+                    const borderClass = isVoiceMode ? 'border-dashed border-red-300 cursor-pointer hover:shadow-md hover:border-red-400' : 'border-gray-100';
+                    const bgClass = BG_COLORS[event.category] || 'bg-gray-100';
+                    const iconHTML = ICONS[event.category] || '';
+
+                    // Voice Note UI
+                    let voiceNoteHTML = '';
+                    if (event.voiceNote) {
+                        voiceNoteHTML = `
+                            <div class="mt-4 bg-gray-50 p-4 rounded-xl border border-gray-100 relative">
+                                <div class="flex items-center gap-1.5 text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg> Transcription
+                                </div>
+                                <p class="text-sm text-gray-700 italic leading-relaxed">"${escapeHTML(event.voiceNote)}"</p>
+                            </div>
+                        `;
+                    }
+
+                    // Voice Mode Indicators
+                    let voiceIndicator = '';
+                    if (isVoiceMode) {
+                        if (isRecording) {
+                            voiceIndicator = `
+                                <div class="absolute top-4 right-4">
+                                    <div class="relative flex items-center justify-center w-8 h-8">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <svg class="relative w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-xs text-red-500 font-semibold flex items-center gap-1 animate-pulse">
+                                    Listening... Tap card again to stop.
+                                </div>
+                            `;
+                        } else {
+                            voiceIndicator = `
+                                <div class="absolute top-4 right-4 text-gray-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    eventsHTML += `
+                        <div data-event-id="${event.id}" class="event-card bg-white rounded-2xl p-5 shadow-sm border ${borderClass} transition-all relative overflow-hidden">
+                            ${voiceIndicator}
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="p-1.5 rounded-lg ${bgClass}">${iconHTML}</div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-gray-500">${event.category}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-1 pr-10">${escapeHTML(event.title)}</h3>
+                            ${event.description ? `<p class="text-gray-600 text-sm mb-4 leading-relaxed">${escapeHTML(event.description)}</p>` : ''}
+                            ${voiceNoteHTML}
+                        </div>
+                    `;
+                });
+                eventsHTML += '</div>';
+
+                yearBlock.innerHTML = `
+                    <div class="absolute -left-[21px] top-0 w-10 h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center font-bold text-gray-800 shadow-sm z-10">
+                        ${String(block.year).substring(2)}'
+                    </div>
+                    ${badgesHTML}
+                    ${eventsHTML}
+                `;
+                
+                DOM.timelineContainer.appendChild(yearBlock);
+            });
+        }
+
+        async function processVoiceTextWithGemini(text) {
+            try {
+                const payload = {
+                    contents: [{
+                        parts: [{ text: `Correct the spelling, grammar, and formatting of this transcribed voice note. Make it readable and coherent without adding any conversational filler. Return only the corrected text:\n\n"${text}"` }]
+                    }],
+                };
+                
+                // key is left blank; platform injects it automatically
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error("Gemini API failed");
+                
+                const result = await response.json();
+                if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
+                    return result.candidates[0].content.parts[0].text.trim();
+                }
+                return text;
+            } catch (err) {
+                console.error("Gemini Error:", err);
+                return text; // Fallback to raw text if AI fails
+            }
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            
+            recognition.onresult = (event) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    }
+                }
+                
+                if (finalTranscript.trim() && recordingEventId) {
+                    handleTranscriptCompletion(recordingEventId, finalTranscript.trim());
+                }
+            };
+            
+            recognition.onend = () => {
+                // If stopped natively, just reset UI
+                recordingEventId = null;
+                renderTimeline();
+            };
+        } else {
+            console.warn("Web Speech API not supported in this browser.");
+        }
+
+        async function handleTranscriptCompletion(eventId, transcript) {
+            // Find event
+            const eventObj = timelineEvents.find(e => e.id === eventId);
+            if (!eventObj) return;
+
+            // Combine with existing note if present
+            const currentNote = eventObj.voiceNote ? eventObj.voiceNote + ' ' : '';
+            const rawText = currentNote + transcript;
+
+            // Call Gemini
+            const correctedText = await processVoiceTextWithGemini(rawText);
+
+            // Save to Firestore
+            if (currentUser && db) {
+                try {
+                    await updateDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'timelineEvents', eventId), {
+                        voiceNote: correctedText
+                    });
+                } catch (err) {
+                    console.error("Failed to save voice note", err);
+                }
+            }
+        }
+
+        // Voice Mode Toggle
+        DOM.toggleVoiceBtn.addEventListener('click', () => {
+            isVoiceMode = !isVoiceMode;
+            if (isVoiceMode) {
+                DOM.toggleVoiceBtn.classList.replace('bg-white', 'bg-red-100');
+                DOM.toggleVoiceBtn.classList.replace('text-gray-600', 'text-red-600');
+                DOM.toggleVoiceBtn.classList.replace('border-gray-300', 'border-red-200');
+                DOM.voiceModeText.textContent = 'Voice Mode: ON';
+            } else {
+                DOM.toggleVoiceBtn.classList.replace('bg-red-100', 'bg-white');
+                DOM.toggleVoiceBtn.classList.replace('text-red-600', 'text-gray-600');
+                DOM.toggleVoiceBtn.classList.replace('border-red-200', 'border-gray-300');
+                DOM.voiceModeText.textContent = 'Voice Mode: OFF';
+                if (recognition && recordingEventId) {
+                    recognition.stop();
+                }
+            }
+            renderTimeline();
+        });
+
+        // Event Delegation for clicking a timeline event card (for voice recording)
+        DOM.timelineContainer.addEventListener('click', (e) => {
+            if (!isVoiceMode) return;
+            
+            const card = e.target.closest('.event-card');
+            if (!card) return;
+
+            const eventId = card.getAttribute('data-event-id');
+            
+            if (recordingEventId === eventId) {
+                // Stop recording
+                recognition.stop();
+                recordingEventId = null;
+            } else {
+                // Start recording
+                if (recordingEventId) recognition.stop();
+                try {
+                    recognition.start();
+                    recordingEventId = eventId;
+                } catch (err) {
+                    console.error("Could not start recording", err);
+                }
+            }
+            renderTimeline(); // re-render to show pulse animation
+        });
+
+        // Modals
+        DOM.openModalBtn.addEventListener('click', () => DOM.addModal.classList.remove('hidden'));
+        DOM.closeModalBtn.addEventListener('click', () => DOM.addModal.classList.add('hidden'));
+
+        // Form Submit
+        DOM.addEventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser || !db) return;
+
+            const formData = new FormData(DOM.addEventForm);
+            const eventData = {
+                year: parseInt(formData.get('year')),
+                category: formData.get('category'),
+                title: formData.get('title'),
+                description: formData.get('description'),
+                voiceNote: '',
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'timelineEvents'), eventData);
+                DOM.addModal.classList.add('hidden');
+                DOM.addEventForm.reset();
+                // Reset select to current year
+                DOM.yearSelect.value = CURRENT_YEAR;
+            } catch (err) {
+                console.error("Error adding event:", err);
+            }
+        });
+
+        // Utility
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])
+            );
+        }
+    </script>
+</body>
+</html>
+```
