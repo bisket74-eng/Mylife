@@ -1,108 +1,318 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#263c35">
-<title>My Life in Chapters</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#e6ded5">
+<title>My Life Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#26352f;--muted:#68756e;--paper:#fbf8f1;--card:#fffdf8;--line:#e6e0d4;--green:#35594b;--sage:#e5eee5;--gold:#c28b42;--rose:#f3e5dc;--shadow:0 10px 30px #25382b0b}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1180px;margin:auto;padding:22px}.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0 26px;border-bottom:1px solid var(--line)}.brand{display:flex;gap:13px;align-items:center}.logo{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:var(--green);color:white;font-size:25px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--muted);font-weight:750}.hero h1{font:500 clamp(25px,4vw,36px)/1.15 Georgia,serif;margin:4px 0}.hero p{margin:5px 0 0;color:var(--muted);font-size:14px}.primary,.secondary,.danger{border:0;border-radius:12px;padding:11px 16px;font-weight:700}.primary{background:var(--green);color:white}.primary:hover{background:#284638}.secondary{background:var(--sage);color:var(--green)}.danger{background:#f8e8e5;color:#9c3b32}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:26px;padding-top:24px}.sidebar{align-self:start;position:sticky;top:12px}.side-title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:0 0 10px}.year-tools{display:flex;gap:7px;margin-bottom:12px}.year-tools input{min-width:0;width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white}.year-list{max-height:58vh;overflow:auto;padding-right:4px;display:flex;flex-direction:column;gap:4px}.year-btn{border:0;text-align:left;background:transparent;padding:9px 12px;border-radius:10px;display:flex;justify-content:space-between;color:var(--ink)}.year-btn small{color:var(--muted)}.year-btn.active,.year-btn:hover{background:var(--sage);color:var(--green);font-weight:750}.privacy-note{margin-top:18px;padding:13px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px;background:#fffaf1}.year-wheel-wrap{display:none}.wheel-btn{border:0;background:transparent;color:var(--muted);font-size:22px;padding:2px 12px}.wheel-center{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:8px;box-shadow:var(--shadow)}.wheel-year{font:500 29px Georgia,serif;color:var(--green);min-width:90px;text-align:center}.wheel-sub{font-size:11px;color:var(--muted);text-align:center}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}.toolbar h2{font:500 30px Georgia,serif;margin:0}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters select,.search{border:1px solid var(--line);background:white;border-radius:10px;padding:9px 11px;color:var(--ink)}.search{width:min(240px,100%)}.year-intro{background:linear-gradient(120deg,#e8efe6,#f6eadb);padding:19px 21px;border-radius:17px;margin-bottom:22px}.year-intro strong{font:500 23px Georgia,serif;display:block}.year-intro span{font-size:13px;color:var(--muted)}.timeline{position:relative;padding-left:25px}.timeline:before{content:"";position:absolute;left:7px;top:9px;bottom:15px;width:2px;background:#dce3d8}.entry{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;margin-bottom:15px;box-shadow:var(--shadow)}.entry:before{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid var(--paper);left:-25px;top:22px}.entry-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.entry-type{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--green);background:var(--sage);border-radius:7px;padding:4px 7px}.entry h3{font:500 22px/1.25 Georgia,serif;margin:9px 0 3px}.entry-meta{font-size:13px;color:var(--muted)}.entry p{white-space:pre-wrap;margin:12px 0 0}.entry-photo{display:block;max-width:100%;max-height:380px;object-fit:contain;border-radius:12px;margin-top:13px;background:#f1eee7}.entry-actions{display:flex;gap:6px;flex-shrink:0}.icon-btn{border:1px solid var(--line);border-radius:9px;background:white;color:var(--muted);padding:6px 9px}.voice-box{margin-top:12px;background:#f5f2e9;border-radius:11px;padding:10px}.voice-box audio{width:100%;height:38px}.voice-label{font-size:12px;color:var(--muted);margin-bottom:5px}.empty{padding:40px 22px;text-align:center;border:1px dashed #d7d0c3;border-radius:16px;color:var(--muted)}.empty strong{display:block;font:500 24px Georgia,serif;color:var(--ink);margin-bottom:6px}.modal{position:fixed;inset:0;background:#16231dcc;display:none;align-items:flex-start;justify-content:center;padding:18px;overflow:auto;z-index:10}.modal.open{display:flex}.dialog{width:min(720px,100%);background:var(--paper);border-radius:20px;padding:23px;margin:auto 0;box-shadow:0 24px 80px #0004}.dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.dialog h2{font:500 28px Georgia,serif;margin:0}.close{border:0;background:transparent;font-size:28px;color:var(--muted)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:750}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid #dcd5c8;border-radius:10px;background:white;color:var(--ink)}.field textarea{min-height:115px;resize:vertical}.hint{font-size:12px;color:var(--muted)}.year-pick{display:flex;gap:7px;align-items:center}.year-pick input{flex:1;min-width:0}.year-pick button{padding:8px 10px;border:1px solid var(--line);background:white;border-radius:9px}.voice-controls{display:flex;gap:8px;flex-wrap:wrap}.recording{background:#a7372f!important}.form-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:19px}.form-actions-right{display:flex;gap:8px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#20392e;color:white;border-radius:12px;padding:11px 17px;box-shadow:var(--shadow);display:none;z-index:20;max-width:90vw}.toast.show{display:block}.footer{color:var(--muted);font-size:12px;text-align:center;padding:30px 0 12px}.print-only{display:none}
-@media(max-width:760px){.shell{padding:12px}.hero{align-items:center;padding:13px 0 16px;gap:8px}.brand{gap:9px}.logo{width:38px;height:38px;border-radius:12px;font-size:20px}.eyebrow{font-size:9px}.hero h1{font-size:24px}.hero p{display:none}.hero .primary{padding:9px 10px;font-size:13px;white-space:nowrap}.layout{grid-template-columns:1fr;gap:13px;padding-top:14px}.sidebar{position:static}.year-tools,.sidebar>.side-title,.sidebar>.year-list{display:none}.year-wheel-wrap{display:block}.year-list{max-height:none;overflow-x:auto;overflow-y:hidden;display:flex;flex-direction:row;padding:2px 0 7px}.year-btn{white-space:nowrap;gap:8px;border:1px solid var(--line);background:white}.year-btn.active{border-color:#b7cdb9}.privacy-note{display:none}.toolbar{margin-bottom:13px;gap:9px}.toolbar h2{font-size:25px}.search{width:100%;padding:11px}.filters{width:100%}.filters select{flex:1;min-width:0;padding:10px}.year-intro{padding:14px 16px;margin-bottom:15px;border-radius:13px}.year-intro strong{font-size:21px}.timeline{padding-left:20px}.entry{padding:13px;border-radius:13px;margin-bottom:11px}.entry h3{font-size:20px}.entry p{font-size:15px}.entry-photo{max-height:280px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.dialog{padding:16px;border-radius:17px}.entry-actions{gap:4px}.icon-btn{padding:6px}.footer{padding:20px 0 8px}}
-@media print{body{background:white}.shell{max-width:none;padding:0}.hero .primary,.sidebar,.toolbar .filters,.entry-actions,.footer,.year-intro span{display:none!important}.layout{display:block;padding:0}.toolbar h2{font-size:24px}.entry{break-inside:avoid;box-shadow:none}.timeline:before{background:#ddd}.modal,.toast{display:none!important}.print-only{display:block}}
+:root{
+  color-scheme:light;
+  --bg:#efe9e1; --card:#fbf8f4; --ink:#2e2723; --soft:#6f635a; --line:#cfc3b6;
+  --accent:#6b3a4a; --ok:#4f6a2f; --bad:#a63d3d;
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 var(--sans);
+  padding:env(safe-area-inset-top,0px) 0 calc(env(safe-area-inset-bottom,0px) + 40px)}
+main{max-width:600px;margin:0 auto;padding:0 16px}
+h1{font:700 2.3rem/1.1 var(--serif);margin:24px 0 16px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:600 1.05rem var(--sans);height:52px;border-radius:12px;border:2px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;padding:0 14px}
+button.solid{background:var(--accent);color:#fff}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px 16px;margin:0 0 14px}
+.lab{font-weight:600;color:var(--soft);font-size:.95rem;margin:0 0 6px;display:block}
+.wheel{position:relative;height:176px;border-radius:12px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.wheel::before{content:"";position:absolute;left:8px;right:8px;top:66px;height:44px;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);pointer-events:none;z-index:1}
+#ylist{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;padding:66px 0;scrollbar-width:none;overscroll-behavior:contain;
+  -webkit-mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent);mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent)}
+#ylist::-webkit-scrollbar{display:none}
+#ylist div{height:44px;text-align:center;font:600 1.5rem/44px var(--serif);color:var(--soft);scroll-snap-align:center;scroll-snap-stop:always;cursor:pointer}
+#ylist div.has::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:8px;vertical-align:middle}
+#ylist div.sel{color:var(--accent);font-size:1.9rem;font-weight:700}
+
+.pagehead{margin:24px 0 4px}
+.pagehead h2{font:700 2.8rem/1 var(--serif);color:var(--accent);margin:0}
+.saved{min-height:1.4em;margin:0 0 8px;color:var(--ok);font-weight:600;font-size:.95rem}
+.saved.err{color:var(--bad)}
+.card h3{font:700 1.5rem/1.2 var(--serif);margin:0 0 10px}
+.add{display:grid;grid-template-columns:1fr auto;gap:8px}
+input[type=text]{width:100%;height:52px;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 12px}
+.items{list-style:none;margin:10px 0 0;padding:0}
+.items li{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:2px 0 2px 2px}
+.items li span{padding:8px 0}
+.items button{height:44px;border:0;color:var(--soft);font-size:.92rem;padding:0 6px}
+.none{color:var(--soft);margin:10px 0 0;font-size:.95rem}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 12px}
+.pic{display:grid;gap:6px}
+.pic img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.pic input{height:44px;font-size:.95rem}
+.pic button{height:38px;border:0;color:var(--soft);font-size:.9rem;padding:0}
+.addpic{width:100%}
+.menu{display:grid;gap:10px;margin-top:26px;grid-template-columns:1fr 1fr 1fr}
+.menu button{height:64px;font-size:.98rem}
+
+#book{display:none}
+@media print{
+  body{background:#fff;color:#222;padding:0;font:12pt/1.55 Georgia,'Times New Roman',serif}
+  main{display:none}
+  #book{display:block}
+  #book .cover{height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;page-break-after:always}
+  #book .cover h1{font:700 44pt/1.1 Georgia,serif;margin:0 0 12pt}
+  #book .cover p{font-size:14pt;color:#555;margin:0}
+  #book .yr{margin:0 0 28pt}
+  #book h2{font:700 30pt/1 Georgia,serif;margin:0 0 14pt;padding-bottom:6pt;border-bottom:1pt solid #999;break-after:avoid;page-break-after:avoid}
+  #book p{margin:0 0 6pt;break-inside:avoid;page-break-inside:avoid}
+  #book p b{color:#555}
+  #book .ph{display:inline-block;width:46%;margin:6pt 2% 10pt 0;vertical-align:top;break-inside:avoid;page-break-inside:avoid}
+  #book .ph img{display:block;width:100%;max-height:8cm;object-fit:contain;border:1pt solid #bbb}
+  #book .ph span{display:block;font-size:10pt;color:#555;margin-top:2pt}
+}
 </style>
 </head>
 <body>
-<div class="shell">
-<header class="hero">
- <div class="brand"><div class="logo" aria-hidden="true">✦</div><div><div class="eyebrow">A personal archive</div><h1>My Life in Chapters</h1><p>People, places, journeys, and moments that made me.</p></div></div>
- <button class="primary" id="addTop">＋ Add memory</button>
-</header>
-<div class="layout">
- <aside class="sidebar">
-  <div class="year-wheel-wrap">
-   <div class="side-title">Your life · choose a year</div>
-   <div class="wheel-center">
-    <button type="button" class="wheel-btn" id="wheelPrev" aria-label="Previous year">‹</button>
-    <div><div class="wheel-year" id="wheelYear">2026</div><div class="wheel-sub" id="wheelCount">Tap arrows to browse</div></div>
-    <button type="button" class="wheel-btn" id="wheelNext" aria-label="Next year">›</button>
-   </div>
+<main>
+  <h1>My Life Book</h1>
+
+  <section class="card" aria-label="Pick a year">
+    <span class="lab" id="ylab">Pick a year</span>
+    <div class="wheel"><div id="ylist" role="listbox" aria-labelledby="ylab" tabindex="0"></div></div>
+  </section>
+
+  <div class="pagehead"><h2 id="yearTitle"></h2></div>
+  <p class="saved" id="saved" role="status"></p>
+  <div id="page"></div>
+
+  <div class="menu">
+    <button type="button" class="solid" id="book-btn">Print as book</button>
+    <button type="button" id="exp">Save backup</button>
+    <button type="button" id="imp">Restore backup</button>
+    <input id="impFile" type="file" accept="application/json,.json" hidden>
   </div>
-  <div class="side-title">Jump to a year</div>
-  <div class="year-tools"><input id="yearJump" type="number" min="1900" max="2100" placeholder="Enter year" aria-label="Jump to year"><button class="secondary" id="jumpBtn">Go</button></div>
-  <div class="year-list" id="yearList" aria-label="Timeline years"></div>
-  <div class="privacy-note"><strong>Your memories matter.</strong><br>This starter version stores entries in this browser on this device. Export backups regularly. It does not sync automatically between devices.</div>
- </aside>
- <main>
-  <div class="toolbar"><h2 id="viewTitle">Your timeline</h2><div class="filters"><input class="search" id="search" placeholder="Search memories…" aria-label="Search memories"><select id="typeFilter" aria-label="Filter by type"><option value="all">All memories</option><option>Photo</option><option>Job</option><option>Home</option><option>Person</option><option>Event</option><option>Trip</option><option>Milestone</option><option>Other</option></select></div></div>
-  <div class="year-intro"><strong id="yearHeading">Every year tells a story.</strong><span id="yearSub">Choose a year or browse your memories below.</span></div>
-  <div class="timeline" id="timeline"></div>
-  <div class="footer">Made for remembering · Use “Export backup” to keep a copy of your archive.</div>
- </main>
-</div>
-</div>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
- <div class="dialog">
-  <div class="dialog-head"><h2 id="formTitle">Add a memory</h2><button class="close" id="closeModal" aria-label="Close">×</button></div>
-  <form id="memoryForm">
-   <div class="form-grid">
-    <div class="field"><label for="kind">What are you adding?</label><select id="kind" required><option>Photo</option><option>Job</option><option>Home</option><option>Person</option><option>Event</option><option>Trip</option><option>Milestone</option><option>Other</option></select></div>
-    <div class="field"><label for="title">Title</label><input id="title" required placeholder="e.g. First day at a new job"></div>
-    <div class="field"><label for="startYear">Year it began / happened</label><div class="year-pick"><button type="button" id="yearDown" aria-label="Previous year">−</button><input id="startYear" type="number" min="1900" max="2100" required><button type="button" id="yearUp" aria-label="Next year">＋</button></div></div>
-    <div class="field"><label for="endYear">Year it ended (optional)</label><input id="endYear" type="number" min="1900" max="2100" placeholder="Leave blank if ongoing"><span class="hint">For jobs or homes, blank means it continues to the present.</span></div>
-    <div class="field full"><label for="place">Place / address / people (optional)</label><input id="place" placeholder="City, address, workplace, or people involved"></div>
-    <div class="field full"><label for="story">Your story</label><textarea id="story" placeholder="Write a memory, or use the microphone below to tell it in your own words."></textarea><span class="hint">Speech-to-text uses your browser’s speech recognition when supported. Review the transcript before saving.</span></div>
-    <div class="field full"><label for="photo">Photo (optional)</label><input id="photo" type="file" accept="image/*"><span class="hint" id="photoHint">Choose a picture from your phone or computer. Large photos use more browser storage.</span><img id="photoPreview" alt="Selected photo preview" style="display:none;max-width:100%;max-height:180px;object-fit:contain;border-radius:10px"></div>
-    <div class="field full"><label>Voice recording (optional)</label><div class="voice-controls"><button type="button" class="secondary" id="speechBtn">🎙 Dictate story</button><button type="button" class="secondary" id="recordBtn">● Record voice</button><button type="button" class="secondary" id="stopBtn" disabled>Stop recording</button></div><span class="hint" id="voiceStatus">Dictation fills the story text. Voice recording saves audio separately when your browser supports it.</span><audio id="audioPreview" controls style="display:none;width:100%;margin-top:8px"></audio></div>
-   </div>
-   <div class="form-actions"><button type="button" class="danger" id="deleteBtn" style="display:none">Delete memory</button><div class="form-actions-right"><button type="button" class="secondary" id="cancelBtn">Cancel</button><button class="primary" type="submit">Save memory</button></div></div>
-  </form>
- </div>
-</div>
-<div class="toast" id="toast" role="status"></div>
+</main>
+<div id="book" aria-hidden="true"></div>
+
 <script>
 (function(){
-'use strict';
-const $=id=>document.getElementById(id);
-const DB_NAME='life-in-chapters-db', STORE='memories', LEGACY='life-in-chapters-v1';
-let memories=[], selectedYear=null, editingId=null, photoData='', audioBlob=null, audioUrl='', mediaRecorder=null, audioChunks=[], recognition=null, db=null;
-const currentYear=new Date().getFullYear();
-function uid(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
-function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function notify(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2800)}
-function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains(STORE))d.createObjectStore(STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
-function dbAll(){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function dbPut(item){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).put(item);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
-function dbDelete(id){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
-function saveFallback(){try{localStorage.setItem(LEGACY,JSON.stringify(memories.filter(m=>!m.photo&&!m.audioData)))}catch(e){}}
-function yearsForMemory(m){let end=Number(m.endYear)||currentYear;end=Math.min(currentYear,Math.max(Number(m.year),end));const arr=[];for(let y=Number(m.year);y<=end;y++)arr.push(y);return arr}
-function displayYears(){const set=new Set();for(let y=1900;y<=currentYear;y++)set.add(y);memories.forEach(m=>yearsForMemory(m).forEach(y=>set.add(y)));return [...set].sort((a,b)=>b-a)}
-function renderYears(){const ys=displayYears();$('yearList').innerHTML=ys.map(y=>`<button class="year-btn ${selectedYear===y?'active':''}" data-year="${y}"><span>${y}</span><small>${memories.filter(m=>yearsForMemory(m).includes(y)).length||''}</small></button>`).join('');$('yearList').querySelectorAll('[data-year]').forEach(b=>b.addEventListener('click',()=>{selectedYear=Number(b.dataset.year);render()}));const wy=selectedYear===null?currentYear:selectedYear;$('wheelYear').textContent=wy;$('wheelCount').textContent=`${memories.filter(m=>yearsForMemory(m).includes(wy)).length} memories`; }
-function render(){renderYears();const query=$('search').value.trim().toLowerCase(),filter=$('typeFilter').value;let list=memories.filter(m=>(selectedYear===null||yearsForMemory(m).includes(selectedYear))&&(filter==='all'||m.kind===filter)&&(!query||[m.title,m.place,m.story,m.kind].join(' ').toLowerCase().includes(query)));list.sort((a,b)=>Number(b.year)-Number(a.year)||String(b.createdAt).localeCompare(String(a.createdAt)));$('viewTitle').textContent=selectedYear?`Memories from ${selectedYear}`:'Your timeline';$('yearHeading').textContent=selectedYear?`Chapter ${selectedYear}`:'Every year tells a story.';$('yearSub').textContent=selectedYear?`${list.length} ${list.length===1?'memory':'memories'} shown · Ongoing jobs and homes appear in each year they cover.`:'Pick a year to jump through your life, or search all your memories.';if(!list.length){$('timeline').innerHTML='<div class="empty"><strong>No memories here yet.</strong>Add a photo, a person, a place you lived, a job, a trip, or a moment you want to keep.</div>';return}
-$('timeline').innerHTML=list.map(m=>{const span=(Number(m.endYear)&&Number(m.endYear)>Number(m.year))?`${m.year} – ${m.endYear}`:`${m.year}`;return `<article class="entry"><div class="entry-head"><div><span class="entry-type">${iconFor(m.kind)} ${escapeHtml(m.kind)}</span><h3>${escapeHtml(m.title)}</h3><div class="entry-meta">${span}${m.place?' · '+escapeHtml(m.place):''}</div></div><div class="entry-actions"><button class="icon-btn" data-edit="${m.id}" aria-label="Edit ${escapeHtml(m.title)}">Edit</button><button class="icon-btn" data-print="${m.id}" aria-label="Print ${escapeHtml(m.title)}">Print</button></div></div>${m.story?`<p>${escapeHtml(m.story)}</p>`:''}${m.photo?`<img class="entry-photo" src="${m.photo}" alt="${escapeHtml(m.title)}">`:''}${m.audioData?`<div class="voice-box"><div class="voice-label">🔊 Original voice recording</div><audio controls preload="none" src="${m.audioData}"></audio></div>`:''}</article>`}).join('');
-$('timeline').querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editMemory(b.dataset.edit)));$('timeline').querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>printMemory(b.dataset.print)))}
-function iconFor(k){return ({Photo:'▧',Job:'▣',Home:'⌂',Person:'♡',Event:'✦',Trip:'➶',Milestone:'✧',Other:'✎'})[k]||'✎'}
-function openForm(m=null){editingId=m?.id||null;photoData=m?.photo||'';audioBlob=null;audioUrl='';$('memoryForm').reset();$('formTitle').textContent=m?'Edit memory':'Add a memory';$('kind').value=m?.kind||'Photo';$('title').value=m?.title||'';$('startYear').value=m?.year||selectedYear||currentYear;$('endYear').value=m?.endYear||'';$('place').value=m?.place||'';$('story').value=m?.story||'';$('photo').value='';$('photoPreview').style.display=photoData?'block':'none';$('photoPreview').src=photoData||'';$('audioPreview').style.display=m?.audioData?'block':'none';$('audioPreview').src=m?.audioData||'';$('deleteBtn').style.display=m?'inline-block':'none';$('modal').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>$('title').focus(),50)}
-function closeForm(){$('modal').classList.remove('open');document.body.style.overflow='';if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl='';if(recognition){try{recognition.stop()}catch(e){}recognition=null}}
-function editMemory(id){const m=memories.find(x=>x.id===id);if(m)openForm(m)}
-function fileToData(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-$('photo').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;if(f.size>7*1024*1024){notify('That photo is over 7 MB. Choose a smaller image for this browser-only version.');e.target.value='';return}try{photoData=await fileToData(f);$('photoPreview').src=photoData;$('photoPreview').style.display='block'}catch(err){notify('Could not load that photo.')}});
-$('yearDown').onclick=()=>$('startYear').stepDown();$('yearUp').onclick=()=>$('startYear').stepUp();
-$('addTop').onclick=()=>openForm();$('closeModal').onclick=closeForm;$('cancelBtn').onclick=closeForm;$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeForm()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal').classList.contains('open'))closeForm()});
-function moveWheel(delta){const base=selectedYear===null?currentYear:selectedYear;selectedYear=Math.max(1900,Math.min(2100,base+delta));render()}$('wheelPrev').onclick=()=>moveWheel(-1);$('wheelNext').onclick=()=>moveWheel(1);
-$('jumpBtn').onclick=()=>{const y=Number($('yearJump').value);if(y>=1900&&y<=2100){selectedYear=y;render()}else notify('Enter a year between 1900 and 2100.')};$('yearJump').addEventListener('keydown',e=>{if(e.key==='Enter')$('jumpBtn').click()});$('search').addEventListener('input',render);$('typeFilter').addEventListener('change',render);
-$('speechBtn').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){notify('Speech-to-text is not supported in this browser. Try Chrome.');return}if(recognition){try{recognition.stop()}catch(e){}recognition=null;$('speechBtn').textContent='🎙 Dictate story';return}recognition=new SR();recognition.lang=navigator.language||'en-US';recognition.continuous=true;recognition.interimResults=true;const existing=$('story').value.trim();$('speechBtn').textContent='■ Stop dictation';$('voiceStatus').textContent='Listening… speak naturally. Check the text for accuracy when finished.';recognition.onresult=e=>{let final='',interim='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript+' ';else interim+=e.results[i][0].transcript}const base=existing?existing+' ':'';$('story').value=base+final+interim};recognition.onerror=e=>{$('voiceStatus').textContent='Dictation stopped ('+e.error+'). Your text remains in the box.'};recognition.onend=()=>{$('speechBtn').textContent='🎙 Dictate story';$('voiceStatus').textContent='Dictation ended. Review and edit the transcript before saving.';recognition=null};try{recognition.start()}catch(e){notify('Could not start speech recognition.')}}; 
-$('recordBtn').onclick=async()=>{if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){notify('Voice recording is not supported in this browser.');return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});audioChunks=[];mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>{if(e.data.size)audioChunks.push(e.data)};mediaRecorder.onstop=()=>{audioBlob=new Blob(audioChunks,{type:mediaRecorder.mimeType||'audio/webm'});if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=URL.createObjectURL(audioBlob);$('audioPreview').src=audioUrl;$('audioPreview').style.display='block';$('voiceStatus').textContent='Recording ready. Save the memory to keep this recording.';stream.getTracks().forEach(t=>t.stop());$('recordBtn').disabled=false;$('stopBtn').disabled=true};mediaRecorder.start();$('recordBtn').disabled=true;$('stopBtn').disabled=false;$('voiceStatus').textContent='Recording…';}catch(e){notify('Microphone access was denied or unavailable.')}};$('stopBtn').onclick=()=>{if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop()};
-$('memoryForm').addEventListener('submit',async e=>{e.preventDefault();const year=Number($('startYear').value),endYear=Number($('endYear').value)||null;if(year<1900||year>2100||endYear&&(endYear<year||endYear>2100)){notify('Check the start and end years.');return}const old=memories.find(m=>m.id===editingId);const submit=e.submitter;submit.disabled=true;submit.textContent='Saving…';try{const audioData=audioBlob?await fileToData(audioBlob):(old?.audioData||'');const m={id:editingId||uid(),kind:$('kind').value,title:$('title').value.trim(),year,endYear,place:$('place').value.trim(),story:$('story').value.trim(),photo:photoData||'',audioData,createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};if(!m.title)throw new Error('Add a title first.');if(db){await dbPut(m)}const idx=memories.findIndex(x=>x.id===m.id);if(idx>=0)memories[idx]=m;else memories.push(m);saveFallback();selectedYear=year;closeForm();render();notify('Memory saved to your timeline.')}catch(err){notify(err.message||'Could not save. Your browser storage may be full.')}finally{submit.disabled=false;submit.textContent='Save memory'}});
-$('deleteBtn').onclick=async()=>{if(!editingId||!confirm('Delete this memory permanently from this browser?'))return;try{if(db)await dbDelete(editingId);memories=memories.filter(m=>m.id!==editingId);saveFallback();closeForm();render();notify('Memory deleted.')}catch(e){notify('Could not delete this memory.')}};
-function printMemory(id){const m=memories.find(x=>x.id===id);if(!m)return;const w=window.open('','_blank');if(!w){notify('Allow pop-ups to print a memory.');return}w.document.write('<!doctype html><html><head><title>'+escapeHtml(m.title)+'</title><meta charset="utf-8"><style>body{font:16px/1.6 Georgia,serif;max-width:760px;margin:40px auto;padding:0 20px;color:#222}h1{font-weight:normal}small{color:#666}img{max-width:100%;max-height:480px;object-fit:contain}p{white-space:pre-wrap}audio{width:100%}</style></head><body><h1>'+escapeHtml(m.title)+'</h1><small>'+m.year+(m.endYear?' – '+m.endYear:'')+' · '+escapeHtml(m.kind)+(m.place?' · '+escapeHtml(m.place):'')+'</small>'+(m.photo?'<p><img src="'+m.photo+'"></p>':'')+'<p>'+escapeHtml(m.story).replace(/\n/g,'<br>')+'</p>'+(m.audioData?'<p>Original voice recording is saved in the app. It may not be included in a printed copy.</p>':'')+'<script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>');w.document.close()}
-$('memoryForm').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.type!=='file')return});
-async function exportBackup(){try{const payload={app:'My Life in Chapters',version:1,exportedAt:new Date().toISOString(),memories};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-life-in-chapters-backup.json';a.click();URL.revokeObjectURL(a.href);notify('Backup downloaded. Keep it somewhere safe.')}catch(e){notify('Could not export backup.')}}
-async function importBackup(file){try{const data=JSON.parse(await file.text());if(!Array.isArray(data.memories))throw new Error('This does not look like a valid backup.');if(!confirm(`Import ${data.memories.length} memories? Existing memories with matching IDs will be replaced.`))return;for(const m of data.memories){if(db)await dbPut(m);const i=memories.findIndex(x=>x.id===m.id);if(i>=0)memories[i]=m;else memories.push(m)}saveFallback();render();notify('Backup imported.')}catch(e){notify(e.message||'Could not import backup.')}}
-const backupBtn=document.createElement('button');backupBtn.className='secondary';backupBtn.textContent='Export backup';backupBtn.style.marginTop='9px';backupBtn.style.width='100%';backupBtn.onclick=exportBackup;$('yearList').after(backupBtn);
-const importLabel=document.createElement('label');importLabel.className='secondary';importLabel.style.cssText='display:block;text-align:center;margin-top:7px;cursor:pointer';importLabel.textContent='Import backup';const importInput=document.createElement('input');importInput.type='file';importInput.accept='.json,application/json';importInput.style.display='none';importInput.onchange=()=>{if(importInput.files[0])importBackup(importInput.files[0]);importInput.value=''};importLabel.append(importInput);backupBtn.after(importLabel);
-async function init(){try{db=await openDB();if(db)memories=await dbAll();else throw new Error('No IndexedDB')}catch(e){try{memories=JSON.parse(localStorage.getItem(LEGACY)||'[]')}catch(err){memories=[]}notify('Using limited browser storage. Export backups often.')}render()}
-init();
+  var KEY='lifeBook.v3', V2='lifeBook.v2', V1='lifeBook.v1', OLD='lifeTimeline.v1', YKEY='lifeBook.year';
+  var $=function(id){return document.getElementById(id)};
+  var MIN=1900, MAX=new Date().getFullYear(), H=44, year=1980, shown=null, years={};
+  var FIELDS=[
+    ['friends','Friends','Type a name'],
+    ['places','Places I lived','Address or town'],
+    ['jobs','Jobs','Where did you work?'],
+    ['trips','Trips','Where did you go?'],
+    ['big','Big things that happened','Wedding, birth, move, graduation']
+  ];
+  var ALT={friends:'people',jobs:'job'};
+  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+  function blank(){var d={photos:[]};FIELDS.forEach(function(f){d[f[0]]=[]});return d}
+  function yr(y){return years[y]||(years[y]=blank())}
+  function has(y){var d=years[y];return !!d&&(d.photos.length>0||FIELDS.some(function(f){return d[f[0]].length>0}))}
+  function toList(v){
+    if(Array.isArray(v))v=v.map(String);else if(typeof v==='string')v=v.split(/[,;\n]+/);else v=[];
+    return v.map(function(s){return s.trim()}).filter(Boolean);
+  }
+  function uniq(a){var seen={};return a.filter(function(s){var k=s.toLowerCase();if(seen[k])return false;seen[k]=1;return true})}
+  /* reads this version's year or an older one (halves, or single text boxes) */
+  function norm(s){
+    var d=blank();s=s||{};
+    FIELDS.forEach(function(f){
+      var k=f[0],o=ALT[k]||k;
+      if(s.h1||s.h2)d[k]=uniq(toList(s.h1&&s.h1[o]).concat(toList(s.h2&&s.h2[o])));
+      else d[k]=uniq(toList(s[k]!==undefined?s[k]:s[o]));
+    });
+    d.photos=Array.isArray(s.photos)?s.photos:[];
+    return d;
+  }
+
+  /* ---------- storage ---------- */
+  function load(){
+    var raw=null,k;
+    [KEY,V2,V1].forEach(function(n){if(!raw){try{raw=JSON.parse(localStorage.getItem(n)||'null')}catch(e){}}});
+    if(!raw){
+      try{
+        var old=JSON.parse(localStorage.getItem(OLD)||'[]'),map={home:'places',person:'friends',trip:'trips',job:'jobs'};raw={};
+        old.forEach(function(m){
+          var d=raw[m.year]||(raw[m.year]=blank()),f=map[m.kind]||'big';
+          var line=m.title||m.caption||m.text||'';if(line)d[f].push(line);
+          if(m.img)d.photos.push({id:uid(),img:m.img,cap:m.title||m.caption||''});
+        });
+      }catch(e){raw={}}
+    }
+    years={};Object.keys(raw).forEach(function(y){years[y]=norm(raw[y])});
+    if(!localStorage.getItem(KEY))persist();
+    var y=parseInt(localStorage.getItem(YKEY),10);if(y>=MIN&&y<=MAX)year=y;
+  }
+  function persist(){try{localStorage.setItem(KEY,JSON.stringify(years));return true}catch(e){return false}}
+  function flash(ok,msg){var s=$('saved');s.className='saved'+(ok?'':' err');s.textContent=ok?(msg||'Saved'):'Storage is full. Save a backup, then remove a picture.'}
+
+  /* ---------- year wheel (every year from 1900) ---------- */
+  var list=$('ylist'), selEl=null, wTimer=null;
+  for(var y=MIN;y<=MAX;y++){var d=document.createElement('div');d.textContent=y;d.setAttribute('role','option');list.appendChild(d)}
+  function dot(y){list.children[y-MIN].classList.toggle('has',!!has(y))}
+  function dotsAll(){for(var k=MIN;k<=MAX;k++)dot(k)}
+  function track(){
+    var idx=Math.max(0,Math.min(MAX-MIN,Math.round(list.scrollTop/H))), e=list.children[idx];
+    if(selEl!==e){if(selEl)selEl.classList.remove('sel');e.classList.add('sel');selEl=e}
+    year=MIN+idx;
+  }
+  list.addEventListener('scroll',function(){
+    track();clearTimeout(wTimer);
+    wTimer=setTimeout(function(){try{localStorage.setItem(YKEY,year)}catch(e){}if(year!==shown)showYear()},150);
+  });
+  list.addEventListener('click',function(e){
+    var i=Array.prototype.indexOf.call(list.children,e.target);
+    if(i>-1)list.scrollTo({top:i*H,behavior:'smooth'});
+  });
+
+  /* ---------- the page for one year ---------- */
+  function el(tag,txt,cls){var e=document.createElement(tag);if(txt)e.textContent=txt;if(cls)e.className=cls;return e}
+  function btn(txt,fn,cls){var b=el('button',txt,cls);b.type='button';b.onclick=fn;return b}
+  function showYear(){
+    shown=year;$('yearTitle').textContent=year;$('saved').textContent='';
+    var page=$('page');page.innerHTML='';
+    FIELDS.forEach(function(f){
+      var card=el('section',null,'card');card.appendChild(el('h3',f[1]));
+      var row=el('div',null,'add'), inp=el('input');
+      inp.type='text';inp.placeholder=f[2];inp.autocomplete='off';inp.setAttribute('enterkeyhint','done');inp.setAttribute('aria-label',f[1]);
+      var holder=el('div');
+      function paint(){
+        holder.innerHTML='';
+        var arr=yr(shown)[f[0]];
+        if(!arr.length){holder.appendChild(el('p','Nothing added yet.','none'));return}
+        var ul=el('ul',null,'items');
+        arr.forEach(function(t,i){
+          var li=el('li');li.appendChild(el('span',t));
+          li.appendChild(btn('Remove',function(){arr.splice(i,1);flash(persist(),'Removed');dot(shown);paint()}));
+          ul.appendChild(li);
+        });
+        holder.appendChild(ul);
+      }
+      function add(){
+        var v=inp.value.trim();if(!v)return;
+        v=v.charAt(0).toUpperCase()+v.slice(1);
+        var arr=yr(shown)[f[0]];
+        if(!arr.some(function(t){return t.toLowerCase()===v.toLowerCase()}))arr.push(v);
+        if(!persist()){arr.pop();flash(false);return}
+        inp.value='';flash(true,'Added to '+f[1]);dot(shown);paint();
+      }
+      inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();add()}});
+      row.appendChild(inp);row.appendChild(btn('Add',add,'solid'));
+      card.appendChild(row);card.appendChild(holder);page.appendChild(card);paint();
+    });
+    var pc=el('section',null,'card');pc.appendChild(el('h3','Photos'));
+    var grid=el('div',null,'pics');pc.appendChild(grid);
+    pc.appendChild(btn('Add photos',function(){$('pfile').click()},'addpic solid'));
+    page.appendChild(pc);
+    drawPics(grid);
+  }
+  function drawPics(grid){
+    grid=grid||document.querySelector('.pics');if(!grid)return;
+    grid.innerHTML='';
+    var d=yr(shown);
+    if(!d.photos.length){grid.style.display='none';return}
+    grid.style.display='';
+    d.photos.forEach(function(p){
+      var w=el('div',null,'pic'), im=el('img');im.src=p.img;im.alt=p.cap||'Photo from '+shown;
+      var cap=el('input');cap.type='text';cap.placeholder='Who is this?';cap.value=p.cap||'';cap.setAttribute('aria-label','Caption');
+      cap.addEventListener('input',function(){p.cap=cap.value;clearTimeout(cap._t);cap._t=setTimeout(function(){flash(persist())},500)});
+      w.appendChild(im);w.appendChild(cap);
+      w.appendChild(btn('Remove',function(){
+        if(!confirm('Remove this photo?'))return;
+        d.photos=d.photos.filter(function(k){return k.id!==p.id});
+        flash(persist(),'Removed');dot(shown);drawPics(grid);
+      }));
+      grid.appendChild(w);
+    });
+  }
+
+  /* ---------- photo picker ---------- */
+  function shrink(file,cb){
+    var r=new FileReader();
+    r.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        var s=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');
+        c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',0.7));
+      };
+      im.onerror=function(){cb(null)};im.src=r.result;
+    };
+    r.onerror=function(){cb(null)};r.readAsDataURL(file);
+  }
+  var pf=document.createElement('input');pf.type='file';pf.accept='image/*';pf.multiple=true;pf.hidden=true;document.body.appendChild(pf);
+  pf.onchange=function(){
+    var files=Array.prototype.slice.call(pf.files||[]), y0=shown;pf.value='';
+    (function next(){
+      var f=files.shift();if(!f){if(shown===y0)drawPics();return}
+      shrink(f,function(data){
+        if(data){
+          var ph=yr(y0).photos;ph.push({id:uid(),img:data,cap:''});
+          if(!persist()){ph.pop();flash(false)}else flash(true,'Photo added');
+          dot(y0);
+        }
+        next();
+      });
+    })();
+  };
+
+  /* ---------- print as book ---------- */
+  $('book-btn').onclick=function(){
+    var ys=Object.keys(years).map(Number).filter(has).sort(function(a,b){return a-b});
+    if(!ys.length){alert('Fill in at least one year first.');return}
+    var b=$('book');b.innerHTML='';
+    var c=el('div',null,'cover');c.appendChild(el('h1','My Life'));c.appendChild(el('p',ys[0]+' to '+ys[ys.length-1]));b.appendChild(c);
+    ys.forEach(function(y){
+      var d=years[y], s=el('section',null,'yr');s.appendChild(el('h2',y));
+      FIELDS.forEach(function(f){
+        if(!d[f[0]].length)return;
+        var p=el('p'),bb=el('b',f[1]+': ');p.appendChild(bb);p.appendChild(document.createTextNode(d[f[0]].join(', ')));s.appendChild(p);
+      });
+      d.photos.forEach(function(p){
+        var w=el('div',null,'ph'),im=el('img');im.src=p.img;im.alt='';w.appendChild(im);
+        if(p.cap)w.appendChild(el('span',p.cap));s.appendChild(w);
+      });
+      b.appendChild(s);
+    });
+    setTimeout(function(){window.print()},300);
+  };
+
+  /* ---------- backup / restore ---------- */
+  $('exp').onclick=function(){
+    var blob=new Blob([JSON.stringify({app:'life-book',version:6,years:years})],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='my-life-book-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+  };
+  $('imp').onclick=function(){$('impFile').click()};
+  $('impFile').onchange=function(){
+    var f=this.files[0];this.value='';if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var inc=JSON.parse(r.result).years;if(!inc)throw 0;
+        Object.keys(inc).forEach(function(y){
+          var s=norm(inc[y]),d=yr(y);
+          FIELDS.forEach(function(fl){d[fl[0]]=uniq(d[fl[0]].concat(s[fl[0]]))});
+          var have={};d.photos.forEach(function(p){have[p.id]=1});
+          s.photos.forEach(function(p){if(p&&p.img&&!have[p.id])d.photos.push(p)});
+        });
+        if(!persist())throw 0;
+        dotsAll();showYear();alert('Restored.');
+      }catch(e){alert('That file could not be restored.')}
+    };
+    r.readAsText(f);
+  };
+
+  load();dotsAll();
+  list.scrollTop=(year-MIN)*H;track();showYear();
 })();
 </script>
 </body>
