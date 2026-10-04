@@ -1,394 +1,802 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#efe9e1">
-<title>My Life Timeline</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  color-scheme:light;
-  --bg:#efe9e1; --card:#fbf8f4; --ink:#2e2723; --soft:#6f635a; --line:#cfc3b6;
-  --accent:#6b3a4a; --ok:#4f6a2f; --bad:#a63d3d; --rec:#a63d3d;
-  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
-  --sans:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 var(--sans);
-  padding:env(safe-area-inset-top,0px) 0 calc(env(safe-area-inset-bottom,0px) + 40px)}
-main{max-width:600px;margin:0 auto;padding:0 16px}
-h1{font:700 2.3rem/1.1 var(--serif);margin:24px 0 16px}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-button{font:600 1.05rem var(--sans);height:52px;border-radius:12px;border:2px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;padding:0 14px}
-button.solid{background:var(--accent);color:#fff}
-button.rec.on{background:var(--rec);border-color:var(--rec);color:#fff}
-button:disabled{opacity:.55}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px 16px;margin:0 0 14px;display:grid;gap:12px}
-.card h3{font:700 1.5rem/1.2 var(--serif);margin:0}
-.lab{font-weight:600;color:var(--soft);font-size:.95rem;margin:0 0 4px;display:block}
-textarea,input[type=text],input[type=password],input[type=number]{width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 12px}
-input{height:52px}
-textarea{height:140px;padding:12px;resize:none;line-height:1.4}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.msg{margin:0;min-height:1.4em;font-weight:600;color:var(--ok)}
-.msg.err{color:var(--bad)}
-.hint{margin:0;color:var(--soft);font-size:.92rem}
-.prev{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
-.prev img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Journal & Timeline</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-primary: #38bdf8;
+      --accent-hover: #0284c7;
+      --accent-subtle: rgba(56, 189, 248, 0.15);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --badge-photo: #f43f5e;
+      --badge-place: #10b981;
+      --badge-job: #f59e0b;
+      --badge-trip: #06b6d4;
+      --badge-event: #8b5cf6;
+      --badge-person: #ec4899;
+      --badge-pet: #84cc16;
+    }
 
-.bar{margin:28px 0 12px}
-.bar h2{font:700 1.8rem/1 var(--serif);margin:0}
-.tl{padding-left:22px;border-left:2px solid var(--line)}
-.tl.none{border:0;padding:0}
-.year{margin:0 0 24px}
-.year>h3{font:700 2.1rem/1 var(--serif);margin:0 0 10px;position:relative;color:var(--accent)}
-.year>h3 small{font:600 1rem var(--sans);color:var(--soft);margin-left:8px}
-.year>h3::before{content:"";position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
-.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 10px;display:grid;gap:4px}
-.item .k{font-size:.88rem;font-weight:600;color:var(--soft)}
-.item .t{font:700 1.25rem/1.25 var(--serif)}
-.item .d{margin:0;color:var(--ink)}
-.item img{display:block;width:100%;border-radius:8px;margin-top:4px}
-.item.born{background:transparent;border-style:dashed;color:var(--soft)}
-.acts{display:flex;gap:16px}
-.acts button{height:40px;border:0;color:var(--soft);font-size:.92rem;padding:0}
-.need{display:grid;grid-template-columns:1fr 92px auto;gap:8px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
-.need span{font-weight:600}
-.need button{height:52px}
-.empty{color:var(--soft)}
-.menu{display:grid;gap:10px;margin-top:20px;grid-template-columns:1fr 1fr 1fr}
-.menu button{height:60px;font-size:.95rem}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-#book{display:none}
-@media print{
-  body{background:#fff;color:#222;padding:0;font:12pt/1.55 Georgia,'Times New Roman',serif}
-  main{display:none}
-  #book{display:block}
-  #book .cover{height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;page-break-after:always}
-  #book .cover h1{font:700 44pt/1.1 Georgia,serif;margin:0 0 12pt}
-  #book .cover p{font-size:14pt;color:#555;margin:0}
-  #book .yr{margin:0 0 26pt}
-  #book h2{font:700 28pt/1 Georgia,serif;margin:0 0 12pt;padding-bottom:6pt;border-bottom:1pt solid #999;break-after:avoid;page-break-after:avoid}
-  #book h2 small{font-size:12pt;color:#666;margin-left:8pt;font-weight:400}
-  #book p{margin:0 0 6pt;break-inside:avoid;page-break-inside:avoid}
-  #book .ph{display:inline-block;width:46%;margin:6pt 2% 10pt 0;vertical-align:top;break-inside:avoid;page-break-inside:avoid}
-  #book .ph img{display:block;width:100%;max-height:8cm;object-fit:contain;border:1pt solid #bbb}
-  #book .ph span{display:block;font-size:10pt;color:#555;margin-top:2pt}
-}
-</style>
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: var(--accent-primary);
+      color: #0f172a;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    /* Year Navigation Ribbon */
+    .year-ribbon-container {
+      background: rgba(30, 41, 59, 0.5);
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      position: sticky;
+      top: 57px;
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+
+    .year-ribbon {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+    }
+
+    .year-chip {
+      padding: 6px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 64px;
+    }
+
+    .year-chip .sub-age {
+      font-size: 0.65rem;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    .year-chip.active, .year-chip:hover {
+      background: var(--accent-primary);
+      color: #0f172a;
+      border-color: var(--accent-primary);
+    }
+
+    .year-chip.active .sub-age, .year-chip:hover .sub-age {
+      opacity: 0.9;
+    }
+
+    /* Main Content Container */
+    main {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 16px 100px;
+      flex: 1;
+    }
+
+    /* Input Card Container */
+    .input-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .input-header h2 {
+      font-size: 1.1rem;
+      color: var(--text-main);
+    }
+
+    .voice-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: none;
+    }
+
+    .voice-btn.recording {
+      animation: pulse 1.5s infinite;
+      background: #dc2626;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .year-calc-badge {
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+      margin-top: 2px;
+    }
+
+    /* Timeline Cards */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-primary), rgba(255, 255, 255, 0.05));
+    }
+
+    .year-section {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .year-heading {
+      position: sticky;
+      top: 105px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      background: var(--bg-color);
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      margin-left: -20px;
+      margin-bottom: 16px;
+    }
+
+    .year-heading h3 {
+      font-size: 1.2rem;
+      color: var(--accent-primary);
+    }
+
+    .year-heading span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .memory-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .memory-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .category-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: #fff;
+    }
+
+    .tag-photo { background: var(--badge-photo); }
+    .tag-place { background: var(--badge-place); }
+    .tag-job { background: var(--badge-job); }
+    .tag-trip { background: var(--badge-trip); }
+    .tag-event { background: var(--badge-event); }
+    .tag-person { background: var(--badge-person); }
+    .tag-pet { background: var(--badge-pet); }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .delete-btn:hover {
+      color: #ef4444;
+    }
+
+    .memory-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .memory-desc {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .memory-img {
+      width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    /* Modal / Utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
-<main>
-  <h1>My Life Timeline</h1>
 
-  <section class="card" aria-label="Tell me anything">
-    <h3>Tell me anything</h3>
-    <textarea id="text" aria-label="Your thoughts" placeholder="Talk or type, in any order. For example: I was born in 1976. I moved back to Vancouver, Washington when I was 20. I had Kristen in 1992."></textarea>
-    <div class="two">
-      <button type="button" class="rec" id="rec" aria-pressed="false">Speak</button>
-      <button type="button" id="pic">Add a photo</button>
+  <header>
+    <div class="logo">Life Timeline Journal</div>
+    <div class="header-actions">
+      <button class="btn" id="exportBtn">Export JSON</button>
+      <button class="btn" id="importBtn">Import JSON</button>
+      <input type="file" id="importFile" class="hidden" accept=".json" />
     </div>
-    <button type="button" class="solid" id="go">Add to my timeline</button>
-    <p class="msg" id="msg" role="status"></p>
-  </section>
-  <input id="pfile" type="file" accept="image/*" hidden>
+  </header>
 
-  <section class="card" id="photoPanel" hidden aria-label="Photo details">
-    <h3>Which year is this photo from?</h3>
-    <div class="prev"><img id="pimg" alt="Photo you chose"><div>
-      <label class="lab" for="pyear">Year</label>
-      <input type="number" id="pyear" inputmode="numeric" placeholder="1992">
-    </div></div>
-    <div><label class="lab" for="pcap">Who or what is in it? (optional)</label><input type="text" id="pcap"></div>
-    <div class="two">
-      <button type="button" class="solid" id="psave">Add photo</button>
-      <button type="button" id="pcancel">Cancel</button>
-    </div>
-    <p class="msg err" id="pmsg" role="status"></p>
-  </section>
-
-  <div id="needs"></div>
-
-  <div class="bar"><h2>My timeline</h2></div>
-  <div id="tl" class="tl"></div>
-
-  <div class="menu">
-    <button type="button" class="solid" id="book-btn">Print as book</button>
-    <button type="button" id="exp">Save backup</button>
-    <button type="button" id="imp">Restore backup</button>
-    <input id="impFile" type="file" accept="application/json,.json" hidden>
+  <!-- Horizontal Scrollable Year Ribbon -->
+  <div class="year-ribbon-container">
+    <div class="year-ribbon" id="yearRibbon"></div>
   </div>
 
-  <section class="card" id="settings" style="margin-top:20px" aria-label="Settings">
-    <h3>Settings</h3>
-    <div><label class="lab" for="birth">Year you were born</label><input type="number" id="birth" inputmode="numeric" placeholder="1976"></div>
-    <div><label class="lab" for="key">Anthropic API key</label><input type="password" id="key" autocomplete="off" placeholder="sk-ant-..."></div>
-    <p class="hint">The key is kept only on this phone and goes only to Anthropic. It is never saved in this web page or your GitHub repository.</p>
-    <button type="button" class="solid" id="ssave">Save settings</button>
-    <p class="msg" id="smsg" role="status"></p>
-  </section>
-</main>
-<div id="book" aria-hidden="true"></div>
+  <main>
+    <!-- Simple Input Panel -->
+    <div class="input-panel">
+      <div class="input-header">
+        <h2>Add Memory</h2>
+        <button class="voice-btn" id="voiceBtn">
+          <span>🎙️ Voice Input</span>
+        </button>
+      </div>
 
-<script>
-(function(){
-  var MODEL='claude-sonnet-5-5';
-  var KEY='lifeTL.v1', AKEY='lifeTL.key', OLD='lifeBook.v3';
-  var $=function(id){return document.getElementById(id)};
-  var NOW=new Date().getFullYear(), LOW=1850;
-  var LABEL={person:'Person',place:'Place',job:'Job',trip:'Trip',family:'Family',milestone:'Milestone',other:'Note',photo:'Photo'};
-  var data={birthYear:null,events:[]}, pending=null;
-  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
-  function validYear(v){var n=parseInt(v,10);return n>=LOW&&n<=NOW?n:null}
+      <form id="memoryForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" required>
+              <option value="photo">📸 Photo & Person</option>
+              <option value="place">🏡 Place Lived</option>
+              <option value="job">💼 Job / Career</option>
+              <option value="trip">✈️ Trip / Travel</option>
+              <option value="event">🎉 Important Event</option>
+              <option value="person">👥 Important Person / Friend</option>
+              <option value="pet">🐾 Pet</option>
+            </select>
+          </div>
 
-  /* ---------- storage ---------- */
-  function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){return false}}
-  function load(){
-    try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&Array.isArray(d.events))data=d}catch(e){}
-    if(!localStorage.getItem(KEY)){
-      try{ /* bring over entries from the earlier year-by-year version */
-        var o=JSON.parse(localStorage.getItem(OLD)||'null');
-        if(o)Object.keys(o).forEach(function(y){
-          var s=o[y],map={friends:'person',places:'place',jobs:'job',trips:'trip',big:'milestone'};
-          Object.keys(map).forEach(function(k){(s[k]||[]).forEach(function(t){data.events.push({id:uid(),year:+y,title:t,details:'',type:map[k],created:Date.now()})})});
-          (s.photos||[]).forEach(function(p){data.events.push({id:uid(),year:+y,title:p.cap||'',details:'',type:'photo',img:p.img,created:Date.now()})});
+          <div class="form-group">
+            <label for="yearInput">Year / Age Picker</label>
+            <select id="yearInput" required></select>
+            <div class="year-calc-badge" id="yearAgeCalc">Age: 0</div>
+          </div>
+
+          <div class="form-group full-width" id="photoGroup">
+            <label for="photoFile">Upload Photo</label>
+            <input type="file" id="photoFile" accept="image/*" />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="titleInput" id="titleLabel">Title / Name</label>
+            <input type="text" id="titleInput" placeholder="e.g., Moved to Vancouver, Started USPS, Pet name..." required />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="detailsInput">Memory / Details</label>
+            <textarea id="detailsInput" rows="3" placeholder="Talk or write about this memory..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
+          ➕ Save to Timeline
+        </button>
+      </form>
+    </div>
+
+    <!-- Timeline Journal View -->
+    <div id="timelineContainer" class="timeline"></div>
+  </main>
+
+  <script>
+    // User Anchor Configuration
+    const BIRTH_YEAR = 1974;
+    const BIRTH_MONTH = 7; // August (0-indexed: 7)
+    const CURRENT_YEAR = new Date().getFullYear();
+
+    // Data Store
+    let memories = JSON.parse(localStorage.getItem('life_journal_memories') || '[]');
+
+    // DOM Elements
+    const yearRibbon = document.getElementById('yearRibbon');
+    const yearSelect = document.getElementById('yearInput');
+    const yearAgeCalc = document.getElementById('yearAgeCalc');
+    const categorySelect = document.getElementById('category');
+    const photoGroup = document.getElementById('photoGroup');
+    const titleLabel = document.getElementById('titleLabel');
+    const memoryForm = document.getElementById('memoryForm');
+    const timelineContainer = document.getElementById('timelineContainer');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const importFile = document.getElementById('importFile');
+
+    // Populate Year Ribbon & Select Options
+    function initYearPickers() {
+      yearRibbon.innerHTML = '';
+      yearSelect.innerHTML = '';
+
+      for (let yr = BIRTH_YEAR; yr <= CURRENT_YEAR; yr++) {
+        const age = yr - BIRTH_YEAR;
+
+        // Populate Select
+        const option = document.createElement('option');
+        option.value = yr;
+        option.textContent = `${yr} (Age ${age})`;
+        if (yr === CURRENT_YEAR) option.selected = true;
+        yearSelect.appendChild(option);
+
+        // Populate Ribbon Chip
+        const chip = document.createElement('div');
+        chip.className = `year-chip ${yr === CURRENT_YEAR ? 'active' : ''}`;
+        chip.dataset.year = yr;
+        chip.innerHTML = `<span>${yr}</span><span class="sub-age">Age ${age}</span>`;
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.year-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          scrollToYear(yr);
         });
-        if(data.events.length)persist();
-      }catch(e){}
+        yearRibbon.appendChild(chip);
+      }
+      updateAgeDisplay();
     }
-  }
-  function say(id,t,bad){var m=$(id);m.textContent=t;m.className='msg'+(bad?' err':'')}
 
-  /* ---------- settings ---------- */
-  $('ssave').onclick=function(){
-    var b=$('birth').value.trim(),k=$('key').value.trim();
-    if(b){var y=validYear(b);if(!y){say('smsg','Enter a four-digit birth year.',1);return}data.birthYear=y}
-    if(k)try{localStorage.setItem(AKEY,k)}catch(e){}
-    $('key').value='';if(!persist()){say('smsg','Could not save.',1);return}
-    say('smsg','Saved.');render();
-  };
+    function scrollToYear(year) {
+      const el = document.getElementById(`year-section-${year}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // If year section doesn't exist yet, scroll to timeline top
+        timelineContainer.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
 
-  /* ---------- voice ---------- */
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition, rec=null, recording=false, base='', finalText='';
-  function setRec(on){recording=on;var b=$('rec');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.textContent=on?'Stop':'Speak'}
-  function startRec(){
-    if(!SR){say('msg','Speaking needs Chrome. You can type instead.',1);return}
-    base=$('text').value.trim();finalText='';
-    rec=new SR();rec.lang='en-US';rec.continuous=false;rec.interimResults=true;
-    rec.onresult=function(ev){
-      var interim='';
-      for(var k=ev.resultIndex;k<ev.results.length;k++){var r=ev.results[k];if(r.isFinal)finalText+=(finalText?' ':'')+r[0].transcript.trim();else interim+=r[0].transcript}
-      $('text').value=[base,finalText,interim.trim()].filter(Boolean).join(' ');
-    };
-    rec.onerror=function(ev){if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){say('msg','Microphone is blocked. Allow it in Chrome site settings.',1);setRec(false)}};
-    rec.onend=function(){if(recording){base=$('text').value.trim();finalText='';try{rec.start()}catch(e){setRec(false)}}};
-    try{rec.start();setRec(true);say('msg','')}catch(e){setRec(false)}
-  }
-  function stopRec(){recording=false;if(rec){try{rec.stop()}catch(e){}}setRec(false)}
-  $('rec').onclick=function(){recording?stopRec():startRec()};
+    function updateAgeDisplay() {
+      const selectedYear = parseInt(yearSelect.value);
+      const age = selectedYear - BIRTH_YEAR;
+      yearAgeCalc.textContent = `Year ${selectedYear} • Age approximately ${age}`;
+    }
 
-  /* ---------- the AI helper ---------- */
-  function systemPrompt(){
-    return 'You turn a person\'s scattered, spoken thoughts into entries for their personal life timeline. '+
-    'The current year is '+NOW+'. Their birth year is '+(data.birthYear||'unknown')+'. '+
-    'Pull out every distinct event, person, place, job, trip or fact they mention. '+
-    'Rules: year is a four-digit number. If they give a year, use it. If they give an age and their birth year is known, year = birth year + age. '+
-    'If the year cannot be worked out from what they said, use null. Never guess a year. '+
-    'If they say what year they were born, return it as birth_year, and do not also list it as an event. '+
-    'title: short and plain, for example "Moved back to Vancouver, Washington" or "Kristen was born". '+
-    'details: other specifics they said, or an empty string. Do not add anything they did not say. '+
-    'type is one of: person, place, job, trip, family, milestone, other. '+
-    'Skip anything already in the timeline list you are given. '+
-    'Return ONLY JSON, no other text: {"birth_year":null,"events":[{"year":1992,"title":"","details":"","type":"family"}]}';
-  }
-  function existing(){
-    return data.events.filter(function(e){return e.type!=='photo'}).slice(-150).map(function(e){return '- '+(e.year||'no year')+': '+e.title}).join('\n')||'(empty)';
-  }
-  function ask(text){
-    var key=localStorage.getItem(AKEY);
-    if(!key)return Promise.reject(new Error('NOKEY'));
-    return fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:MODEL,max_tokens:2000,system:systemPrompt(),
-        messages:[{role:'user',content:'Already in the timeline:\n'+existing()+'\n\nNew thoughts:\n"""\n'+text+'\n"""'}]})
-    }).then(function(r){
-      return r.json().then(function(j){
-        if(!r.ok)throw new Error(r.status===401?'BADKEY':(j&&j.error&&j.error.message)||('Error '+r.status));
-        return j;
-      });
+    yearSelect.addEventListener('change', updateAgeDisplay);
+
+    // Dynamic Category Fields Adjustments
+    categorySelect.addEventListener('change', () => {
+      const cat = categorySelect.value;
+      if (cat === 'photo') {
+        photoGroup.classList.remove('hidden');
+        titleLabel.textContent = 'Person / Subject Name';
+      } else {
+        photoGroup.classList.add('hidden');
+        if (cat === 'place') titleLabel.textContent = 'Location / City / Address';
+        else if (cat === 'job') titleLabel.textContent = 'Job Title / Workplace';
+        else if (cat === 'trip') titleLabel.textContent = 'Destination / Trip Name';
+        else if (cat === 'person') titleLabel.textContent = 'Person Name';
+        else if (cat === 'pet') titleLabel.textContent = 'Pet Name / Species';
+        else titleLabel.textContent = 'Event Title';
+      }
     });
-  }
-  function parse(j){
-    var t=(j.content||[]).map(function(b){return b.type==='text'?b.text:''}).join('');
-    var a=t.indexOf('{'),b=t.lastIndexOf('}');
-    if(a<0||b<a)throw new Error('I could not read the answer. Please try again.');
-    return JSON.parse(t.slice(a,b+1));
-  }
-  $('go').onclick=function(){
-    if(recording)stopRec();
-    var text=$('text').value.trim();
-    if(!text){say('msg','Tell me something first.',1);return}
-    if(!localStorage.getItem(AKEY)){say('msg','Add your Anthropic key in Settings at the bottom first.',1);$('settings').scrollIntoView({block:'center'});return}
-    var go=$('go');go.disabled=true;say('msg','Reading your thoughts...');
-    ask(text).then(function(j){
-      var out=parse(j),n=0,u=0;
-      var by=validYear(out.birth_year);if(by){data.birthYear=by}
-      (out.events||[]).forEach(function(e){
-        if(!e||!e.title)return;
-        var y=validYear(e.year);
-        data.events.push({id:uid(),year:y,title:String(e.title).trim(),details:String(e.details||'').trim(),type:LABEL[e.type]?e.type:'other',created:Date.now()});
-        y?n++:u++;
-      });
-      if(!persist()){data.events.length-=(n+u);throw new Error('Storage is full. Save a backup first.')}
-      $('text').value='';
-      var m=[];if(by)m.push('birth year '+by+' saved');if(n)m.push(n+' added to your timeline');if(u)m.push(u+' need a year');
-      say('msg',m.length?(m.join(', ')+'.').replace(/^./,function(c){return c.toUpperCase()}):'I did not find anything new to add.');
-      render();
-    }).catch(function(e){
-      var m=e.message==='BADKEY'?'That API key was not accepted. Check it in Settings.':(e instanceof TypeError?'Could not reach the internet. Try again.':(e instanceof SyntaxError?'I could not read the answer. Please try again.':e.message));
-      say('msg',m,1);
-    }).then(function(){go.disabled=false});
-  };
 
-  /* ---------- photos ---------- */
-  function shrink(file,cb){
-    var r=new FileReader();
-    r.onload=function(){
-      var im=new Image();
-      im.onload=function(){
-        var s=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');
-        c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
-        c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',0.7));
+    // Voice Input & Natural Language Age/Year AI Parser
+    let recognition = null;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRec();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => voiceBtn.classList.add('recording');
+      recognition.onend = () => voiceBtn.classList.remove('recording');
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('detailsInput').value += (document.getElementById('detailsInput').value ? ' ' : '') + transcript;
+        parseSpeechForYearAndCategory(transcript);
       };
-      im.onerror=function(){cb(null)};im.src=r.result;
-    };
-    r.onerror=function(){cb(null)};r.readAsDataURL(file);
-  }
-  $('pic').onclick=function(){$('pfile').click()};
-  $('pfile').onchange=function(){
-    var f=this.files[0];this.value='';if(!f)return;
-    shrink(f,function(d){
-      if(!d){say('msg','Could not read that photo.',1);return}
-      pending=d;$('pimg').src=d;$('pyear').value='';$('pcap').value='';say('pmsg','');
-      $('photoPanel').hidden=false;$('photoPanel').scrollIntoView({block:'center'});
-    });
-  };
-  $('pcancel').onclick=function(){pending=null;$('photoPanel').hidden=true};
-  $('psave').onclick=function(){
-    var y=validYear($('pyear').value);
-    if(!y){say('pmsg','Enter the year, for example 1992.',1);return}
-    data.events.push({id:uid(),year:y,title:$('pcap').value.trim(),details:'',type:'photo',img:pending,created:Date.now()});
-    if(!persist()){data.events.pop();say('pmsg','Storage is full. Save a backup first.',1);return}
-    pending=null;$('photoPanel').hidden=true;say('msg','Photo added to '+y+'.');render();
-  };
 
-  /* ---------- timeline ---------- */
-  function el(tag,txt,cls){var e=document.createElement(tag);if(txt)e.textContent=txt;if(cls)e.className=cls;return e}
-  function btn(txt,fn){var b=el('button',txt);b.type='button';b.onclick=fn;return b}
-  function ageLabel(y){return data.birthYear&&y>=data.birthYear?(y===data.birthYear?'Born':'Age '+(y-data.birthYear)):''}
-  function byYear(){
-    var g={};
-    data.events.forEach(function(e){if(e.year)(g[e.year]=g[e.year]||[]).push(e)});
-    if(data.birthYear&&!g[data.birthYear])g[data.birthYear]=[];
-    return Object.keys(g).map(Number).sort(function(a,b){return a-b}).map(function(y){
-      return {year:y,list:g[y].sort(function(a,b){return a.created-b.created})};
-    });
-  }
-  function itemLine(e){return e.type==='photo'?(e.title||'Photo'):e.title}
-  function render(){
-    if(data.birthYear&&document.activeElement!==$('birth'))$('birth').value=data.birthYear;
-    /* events with no year */
-    var nb=$('needs');nb.innerHTML='';
-    var un=data.events.filter(function(e){return !e.year});
-    if(un.length){
-      var c=el('section',null,'card');c.appendChild(el('h3','These need a year'));
-      c.appendChild(el('p','Type the year for each one and tap Place.','hint'));
-      un.forEach(function(e){
-        var row=el('div',null,'need'),inp=el('input');inp.type='number';inp.inputMode='numeric';inp.placeholder='Year';inp.setAttribute('aria-label','Year for '+e.title);
-        row.appendChild(el('span',e.title));row.appendChild(inp);
-        row.appendChild(btn('Place',function(){
-          var y=validYear(inp.value);if(!y){inp.focus();return}
-          e.year=y;persist();render();
-        }));
-        c.appendChild(row);
+      voiceBtn.addEventListener('click', () => {
+        if (voiceBtn.classList.contains('recording')) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
       });
-      nb.appendChild(c);
+    } else {
+      voiceBtn.style.display = 'none';
     }
-    /* timeline */
-    var box=$('tl');box.innerHTML='';
-    var groups=byYear();
-    box.className='tl'+(groups.length?'':' none');
-    if(!groups.length){box.appendChild(el('p','Nothing here yet. Tell me something above and it will land in order.','empty'));return}
-    groups.forEach(function(g){
-      var sec=el('section',null,'year'),h=el('h3',String(g.year)),a=ageLabel(g.year);
-      if(a)h.appendChild(el('small',a));sec.appendChild(h);
-      if(g.year===data.birthYear)sec.appendChild(el('div','You were born.','item born'));
-      g.list.forEach(function(e){
-        var d=el('div',null,'item');
-        d.appendChild(el('span',LABEL[e.type]||'Note','k'));
-        if(e.type==='photo'){var im=el('img');im.src=e.img;im.alt=e.title||'Photo from '+g.year;d.appendChild(im);if(e.title)d.appendChild(el('span',e.title,'t'))}
-        else{d.appendChild(el('span',e.title,'t'));if(e.details)d.appendChild(el('p',e.details,'d'))}
-        var acts=el('div',null,'acts');
-        acts.appendChild(btn('Edit',function(){var v=prompt('Edit:',e.title);if(v===null)return;e.title=v.trim();persist();render()}));
-        acts.appendChild(btn('Change year',function(){var v=prompt('Year:',e.year);if(v===null)return;var y=validYear(v);if(y){e.year=y;persist();render()}}));
-        acts.appendChild(btn('Delete',function(){if(confirm('Delete this?')){data.events=data.events.filter(function(k){return k.id!==e.id});persist();render()}}));
-        d.appendChild(acts);sec.appendChild(d);
-      });
-      box.appendChild(sec);
+
+    // Smart Speech Parser (Deciphers Spoken Age & Year Logic)
+    function parseSpeechForYearAndCategory(text) {
+      const lower = text.toLowerCase();
+
+      // Look for Age references: "when I was 32", "at age 25", "I was 30"
+      const ageMatch = lower.match(/(?:when i was|at age|i was)\s+(\d{1,2})/i);
+      if (ageMatch) {
+        const spokenAge = parseInt(ageMatch[1]);
+        const calculatedYear = BIRTH_YEAR + spokenAge;
+        if (calculatedYear >= BIRTH_YEAR && calculatedYear <= CURRENT_YEAR) {
+          yearSelect.value = calculatedYear;
+          updateAgeDisplay();
+        }
+      }
+
+      // Look for Direct Year references: "in 2006", "back in 1998"
+      const yearMatch = lower.match(/\b(19\d\d|20\d\d)\b/);
+      if (yearMatch) {
+        const spokenYear = parseInt(yearMatch[1]);
+        if (spokenYear >= BIRTH_YEAR && spokenYear <= CURRENT_YEAR) {
+          yearSelect.value = spokenYear;
+          updateAgeDisplay();
+        }
+      }
+
+      // Infer Category keywords
+      if (lower.includes('moved to') || lower.includes('lived in') || lower.includes('house')) {
+        categorySelect.value = 'place';
+      } else if (lower.includes('worked at') || lower.includes('job') || lower.includes('hired')) {
+        categorySelect.value = 'job';
+      } else if (lower.includes('traveled') || lower.includes('trip') || lower.includes('flight') || lower.includes('visited')) {
+        categorySelect.value = 'trip';
+      } else if (lower.includes('cat') || lower.includes('dog') || lower.includes('pet')) {
+        categorySelect.value = 'pet';
+      }
+      categorySelect.dispatchEvent(new Event('change'));
+    }
+
+    // Save Memory Form
+    memoryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const category = categorySelect.value;
+      const year = parseInt(yearSelect.value);
+      const title = document.getElementById('titleInput').value.trim();
+      const details = document.getElementById('detailsInput').value.trim();
+      const photoFileInput = document.getElementById('photoFile');
+
+      let photoData = null;
+      if (category === 'photo' && photoFileInput.files && photoFileInput.files[0]) {
+        photoData = await convertFileToBase64(photoFileInput.files[0]);
+      }
+
+      const newMemory = {
+        id: Date.now().toString(),
+        category,
+        year,
+        age: year - BIRTH_YEAR,
+        title,
+        details,
+        photoData,
+        createdAt: new Date().toISOString()
+      };
+
+      memories.push(newMemory);
+      saveMemories();
+      renderTimeline();
+
+      // Reset form
+      memoryForm.reset();
+      categorySelect.dispatchEvent(new Event('change'));
+      scrollToYear(year);
     });
-  }
 
-  /* ---------- print as book ---------- */
-  $('book-btn').onclick=function(){
-    var gs=byYear();if(!gs.length){alert('Add something to your timeline first.');return}
-    var b=$('book');b.innerHTML='';
-    var c=el('div',null,'cover');c.appendChild(el('h1','My Life'));c.appendChild(el('p',gs[0].year+' to '+gs[gs.length-1].year));b.appendChild(c);
-    gs.forEach(function(g){
-      var s=el('section',null,'yr'),h=el('h2',String(g.year)),a=ageLabel(g.year);
-      if(a)h.appendChild(el('small',a));s.appendChild(h);
-      if(g.year===data.birthYear)s.appendChild(el('p','I was born.'));
-      g.list.forEach(function(e){
-        if(e.type==='photo'){var w=el('div',null,'ph'),im=el('img');im.src=e.img;im.alt='';w.appendChild(im);if(e.title)w.appendChild(el('span',e.title));s.appendChild(w)}
-        else s.appendChild(el('p',e.title+(e.details?'. '+e.details:'')));
+    function convertFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
       });
-      b.appendChild(s);
+    }
+
+    function saveMemories() {
+      localStorage.setItem('life_journal_memories', JSON.stringify(memories));
+    }
+
+    function deleteMemory(id) {
+      if (confirm('Delete this memory?')) {
+        memories = memories.filter(m => m.id !== id);
+        saveMemories();
+        renderTimeline();
+      }
+    }
+
+    // Render Timeline grouped by Year
+    function renderTimeline() {
+      timelineContainer.innerHTML = '';
+
+      if (memories.length === 0) {
+        timelineContainer.innerHTML = `
+          <div class="empty-state">
+            <p>🌟 Your timeline is ready to receive your memories.</p>
+            <p style="font-size: 0.85rem; margin-top: 6px;">Use the voice button or form above to begin adding life events.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group memories by year in descending order
+      const grouped = {};
+      memories.forEach(m => {
+        if (!grouped[m.year]) grouped[m.year] = [];
+        grouped[m.year].push(m);
+      });
+
+      const sortedYears = Object.keys(grouped).sort((a, b) => b - a);
+
+      sortedYears.forEach(year => {
+        const age = year - BIRTH_YEAR;
+        const yearSection = document.createElement('div');
+        yearSection.className = 'year-section';
+        yearSection.id = `year-section-${year}`;
+
+        yearSection.innerHTML = `
+          <div class="year-heading">
+            <h3>${year}</h3>
+            <span>• Age ${age}</span>
+          </div>
+        `;
+
+        grouped[year].forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'memory-card';
+
+          const catTagClass = `tag-${m.category}`;
+          const catLabel = getCategoryLabel(m.category);
+
+          card.innerHTML = `
+            <div class="card-top">
+              <span class="category-tag ${catTagClass}">${catLabel}</span>
+              <div class="card-actions">
+                <button class="delete-btn" onclick="deleteMemory('${m.id}')" title="Delete">🗑️</button>
+              </div>
+            </div>
+            <div class="memory-title">${escapeHtml(m.title)}</div>
+            ${m.details ? `<div class="memory-desc">${escapeHtml(m.details)}</div>` : ''}
+            ${m.photoData ? `<img src="${m.photoData}" class="memory-img" alt="Memory photo" />` : ''}
+          `;
+          yearSection.appendChild(card);
+        });
+
+        timelineContainer.appendChild(yearSection);
+      });
+    }
+
+    function getCategoryLabel(cat) {
+      const map = {
+        photo: '📸 Photo',
+        place: '🏡 Place',
+        job: '💼 Job',
+        trip: '✈️ Trip',
+        event: '🎉 Event',
+        person: '👥 Person',
+        pet: '🐾 Pet'
+      };
+      return map[cat] || 'Memory';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+
+    // JSON Backup Export & Import
+    exportBtn.addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(memories, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `life_journal_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
     });
-    setTimeout(function(){window.print()},300);
-  };
 
-  /* ---------- backup / restore (the API key is never included) ---------- */
-  $('exp').onclick=function(){
-    var blob=new Blob([JSON.stringify({app:'life-timeline',version:7,birthYear:data.birthYear,events:data.events})],{type:'application/json'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-    a.download='my-life-timeline-'+new Date().toISOString().slice(0,10)+'.json';
-    document.body.appendChild(a);a.click();a.remove();
-  };
-  $('imp').onclick=function(){$('impFile').click()};
-  $('impFile').onchange=function(){
-    var f=this.files[0];this.value='';if(!f)return;
-    var r=new FileReader();
-    r.onload=function(){
-      try{
-        var d=JSON.parse(r.result),have={},n=0;
-        if(!Array.isArray(d.events))throw 0;
-        data.events.forEach(function(e){have[e.id]=1});
-        d.events.forEach(function(e){if(e&&e.id&&e.title!==undefined&&!have[e.id]){data.events.push(e);have[e.id]=1;n++}});
-        if(!data.birthYear&&validYear(d.birthYear))data.birthYear=d.birthYear;
-        if(!persist())throw 0;
-        render();alert('Restored '+n+' item'+(n===1?'':'s')+'.');
-      }catch(e){alert('That file could not be restored.')}
-    };
-    r.readAsText(f);
-  };
+    importBtn.addEventListener('click', () => importFile.click());
 
-  load();render();
-  if(!localStorage.getItem(AKEY))say('smsg','Add your key here to turn on the helper.',1);
-})();
-</script>
+    importFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (Array.isArray(imported)) {
+            memories = imported;
+            saveMemories();
+            renderTimeline();
+            alert('Journal timeline successfully restored!');
+          } else {
+            alert('Invalid backup file format.');
+          }
+        } catch (err) {
+          alert('Failed to parse JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Initialize App
+    initYearPickers();
+    renderTimeline();
+  </script>
 </body>
 </html>
