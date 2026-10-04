@@ -2,289 +2,367 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>Life Journal & Timeline</title>
   <style>
     :root {
-      --bg-main: #0b0f19;
-      --card-bg: rgba(22, 30, 46, 0.85);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-blue: #38bdf8;
-      --accent-purple: #818cf8;
-      --accent-gold: #f59e0b;
+      --bg-color: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: #1e293b;
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
-
-      /* Ordered Category Colors */
-      --cat-lived: #10b981;  /* 1. Where I Lived (Emerald) */
-      --cat-job: #f59e0b;    /* 2. What Job I Had (Amber) */
-      --cat-trips: #06b6d4;  /* 3. Trips I Took (Cyan) */
-      --cat-people: #ec4899; /* 4. Important People (Pink) */
-      --cat-events: #8b5cf6; /* 5. Important Events (Purple) */
-      --cat-photo: #f43f5e;  /* Photos (Rose) */
-      --cat-voice: #6366f1;  /* Voice Memos (Indigo) */
+      --accent-blue: #38bdf8;
+      
+      /* Category Accent Colors matching UI */
+      --cat-lived: #10b981;
+      --cat-job: #f59e0b;
+      --cat-trips: #06b6d4;
+      --cat-people: #3b82f6;
+      --cat-events: #a855f7;
+      --cat-photos: #f43f5e;
+      --cat-memos: #6366f1;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 60px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-    /* Top Header Bar */
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-bottom: 120px;
+      min-height: 100vh;
+    }
+
+    /* Sticky Header */
     header {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(11, 15, 25, 0.92); backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--card-border);
-      padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .brand { display: flex; flex-direction: column; }
-    .brand-title { font-size: 1.1rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-sub { font-size: 0.72rem; color: var(--text-muted); }
+
+    .header-titles h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-titles p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
 
     .btn-settings {
-      background: rgba(255, 255, 255, 0.06); color: var(--text-main); border: 1px solid var(--card-border);
-      padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+      background: #1e293b;
+      color: var(--text-main);
+      border: 1px solid #334155;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .btn-settings:hover { background: rgba(255, 255, 255, 0.15); }
 
-    main { max-width: 720px; width: 100%; margin: 0 auto; padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
-
-    /* Input Rows */
-    .input-row-card {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
-      padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    /* Main Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
     }
-    .row-header { display: flex; justify-content: space-between; align-items: center; }
-    .row-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-blue); display: flex; align-items: center; gap: 6px; }
 
-    /* Row 1: AI Story Input */
-    .ai-textarea-box { position: relative; width: 100%; }
-    textarea.story-box {
-      width: 100%; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 12px; color: var(--text-main); font-size: 0.95rem; resize: none; outline: none;
+    /* Year Card */
+    .year-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
-    textarea.story-box:focus { border-color: var(--accent-blue); }
-    
-    .ai-row-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+
+    .year-header {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .year-header span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: normal;
+    }
+
+    /* Category Section */
+    .category-section {
+      margin-bottom: 1rem;
+      border-left: 3px solid transparent;
+      padding-left: 10px;
+    }
+
+    .cat-lived  { border-left-color: var(--cat-lived); }
+    .cat-job    { border-left-color: var(--cat-job); }
+    .cat-trips  { border-left-color: var(--cat-trips); }
+    .cat-people { border-left-color: var(--cat-people); }
+    .cat-events { border-left-color: var(--cat-events); }
+    .cat-photos { border-left-color: var(--cat-photos); }
+    .cat-memos  { border-left-color: var(--cat-memos); }
+
+    .category-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cat-lived .category-title  { color: var(--cat-lived); }
+    .cat-job .category-title    { color: var(--cat-job); }
+    .cat-trips .category-title  { color: var(--cat-trips); }
+    .cat-people .category-title { color: var(--cat-people); }
+    .cat-events .category-title { color: var(--cat-events); }
+    .cat-photos .category-title { color: var(--cat-photos); }
+    .cat-memos .category-title  { color: var(--cat-memos); }
+
+    .empty-placeholder {
+      font-size: 0.85rem;
+      color: #475569;
+      padding: 2px 0;
+    }
+
+    /* Timeline Entry Box */
+    .entry-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .entry-content {
+      flex: 1;
+    }
+
+    .entry-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #f8fafc;
+      margin-bottom: 2px;
+    }
+
+    .entry-desc {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px;
+    }
+
+    .btn-delete:hover {
+      color: #ef4444;
+    }
+
+    /* Fixed Bottom Input Dock */
+    .dock-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--card-border);
+      padding: 0.75rem 1rem;
+      z-index: 200;
+    }
+
+    .dock-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .input-story {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 24px;
+      padding: 10px 16px;
+      color: white;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .input-story:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .btn-action {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
     .btn-mic {
-      background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
-    }
-    .btn-mic.listening {
-      background: #ef4444; color: #fff; border-color: #ef4444; animation: pulse 1.2s infinite;
-    }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
-
-    .btn-parse {
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: #0b0f19; border: none;
-      padding: 8px 18px; border-radius: 20px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      background: #334155;
+      color: #f8fafc;
     }
 
-    /* Round Wheel Selectors */
-    .picker-container { display: flex; gap: 8px; align-items: center; }
-    .wheel-picker-wrap {
-      display: inline-flex; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 4px 8px; align-items: center;
-    }
-    select.wheel-select {
-      background: transparent; border: none; color: var(--accent-blue); font-size: 0.95rem; font-weight: 700;
-      outline: none; padding: 4px; cursor: pointer; text-align-last: center;
-    }
-    select.wheel-select option { background: #1e293b; color: #fff; }
-
-    /* Media Input Inline Elements */
-    .media-input-inline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; width: 100%; }
-    input[type="text"].short-input {
-      flex: 1; min-width: 150px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--card-border);
-      border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.88rem; outline: none;
+    .btn-mic.recording {
+      background: #ef4444;
+      animation: pulse 1.5s infinite;
     }
 
-    .btn-add-media {
-      background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid var(--card-border);
-      padding: 8px 14px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-    }
-    .btn-add-media:hover { background: var(--accent-blue); color: #0b0f19; }
-
-    /* Timeline Structure */
-    .timeline-title-bar {
-      margin-top: 10px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);
-      letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; padding: 0 4px;
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
 
-    .timeline { display: flex; flex-direction: column; gap: 16px; margin-top: 6px; }
-
-    .year-block {
-      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
-      padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 1rem;
     }
-    .year-header-tag { display: flex; align-items: baseline; gap: 8px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
-    .year-header-tag h2 { font-size: 1.2rem; font-weight: 800; color: var(--accent-blue); }
-    .year-header-tag span { font-size: 0.8rem; color: var(--text-muted); }
 
-    /* Category Cards List */
-    .cat-list { display: flex; flex-direction: column; gap: 8px; }
-    .cat-row {
-      background: rgba(15, 23, 42, 0.5); border-left: 4px solid var(--card-border); border-radius: 6px 10px 10px 6px;
-      padding: 8px 12px; display: flex; flex-direction: column; gap: 4px;
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 450px;
+      padding: 1.5rem;
     }
-    .cat-row.lived { border-left-color: var(--cat-lived); }
-    .cat-row.job { border-left-color: var(--cat-job); }
-    .cat-row.trips { border-left-color: var(--cat-trips); }
-    .cat-row.people { border-left-color: var(--cat-people); }
-    .cat-row.events { border-left-color: var(--cat-events); }
-    .cat-row.photos { border-left-color: var(--cat-photo); }
-    .cat-row.voice { border-left-color: var(--cat-voice); }
 
-    .cat-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
-    .cat-row.lived .cat-label { color: var(--cat-lived); }
-    .cat-row.job .cat-label { color: var(--cat-job); }
-    .cat-row.trips .cat-label { color: var(--cat-trips); }
-    .cat-row.people .cat-label { color: var(--cat-people); }
-    .cat-row.events .cat-label { color: var(--cat-events); }
-    .cat-row.photos .cat-label { color: var(--cat-photo); }
-    .cat-row.voice .cat-label { color: var(--cat-voice); }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
 
-    .entry-item { display: flex; justify-content: space-between; align-items: flex-start; font-size: 0.88rem; color: #e2e8f0; line-height: 1.4; padding: 2px 0; }
-    .entry-empty { font-size: 0.8rem; color: rgba(148, 163, 184, 0.4); font-style: italic; }
+    .field-group {
+      margin-bottom: 1.25rem;
+    }
 
-    .del-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; margin-left: 6px; }
-    .del-btn:hover { color: #ef4444; }
+    .field-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
 
-    .media-thumb { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-top: 6px; border: 1px solid var(--card-border); }
-    audio { width: 100%; height: 32px; margin-top: 4px; }
+    .field-group input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px;
+      color: white;
+      font-size: 0.9rem;
+    }
 
-    /* Settings Overlay */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; padding: 16px; }
-    .modal { background: #1e293b; border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-    .modal-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
-    
-    .settings-group { display: flex; flex-direction: column; gap: 8px; background: rgba(15,23,42,0.6); padding: 12px; border-radius: 12px; border: 1px solid var(--card-border); }
-    .settings-group label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--accent-blue); }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
 
-    .legacy-item { background: rgba(30,41,59,0.8); border: 1px solid var(--card-border); padding: 10px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .btn-modal {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+    }
 
-    .hidden { display: none !important; }
+    .btn-primary { background: var(--accent-blue); color: #0f172a; font-weight: 600; }
+    .btn-secondary { background: #334155; color: white; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">
-      <span class="brand-title">Life Journal & Timeline</span>
-      <span class="brand-sub">Born August 21, 1974</span>
+    <div class="header-titles">
+      <h1>Life Journal & Timeline</h1>
+      <p>Born August 21, 1974</p>
     </div>
-    <button class="btn-settings" id="openSettingsBtn">⚙️ Settings & Vault</button>
+    <button class="btn-settings" onclick="openSettings()">⚙️ Settings & Vault</button>
   </header>
 
-  <main>
-    <!-- ROW 1: AI Story Box -->
-    <div class="input-row-card">
-      <div class="row-header">
-        <span class="row-label">✨ Tell Me Your Story</span>
-      </div>
-      <div class="ai-textarea-box">
-        <textarea id="storyInput" class="story-box" rows="2" placeholder="Tell me your story..."></textarea>
-      </div>
-      <div class="ai-row-actions">
-        <button class="btn-mic" id="micBtn">
-          <span id="micIcon">🎙️</span> <span id="micText">Listen</span>
-        </button>
-        <button class="btn-parse" id="parseAiBtn">✨ Add Story</button>
-      </div>
-    </div>
-
-    <!-- ROW 2: Add Photo -->
-    <div class="input-row-card">
-      <div class="row-header">
-        <span class="row-label">📸 Add Photo</span>
-        <div class="picker-container">
-          <div class="wheel-picker-wrap">
-            <select id="photoMonth" class="wheel-select">
-              <option value="">Month (Opt)</option>
-              <option value="Jan">Jan</option><option value="Feb">Feb</option><option value="Mar">Mar</option>
-              <option value="Apr">Apr</option><option value="May">May</option><option value="Jun">Jun</option>
-              <option value="Jul">Jul</option><option value="Aug">Aug</option><option value="Sep">Sep</option>
-              <option value="Oct">Oct</option><option value="Nov">Nov</option><option value="Dec">Dec</option>
-            </select>
-            <select id="photoYear" class="wheel-select"></select>
-          </div>
-        </div>
-      </div>
-      <div class="media-input-inline">
-        <input type="file" id="photoFile" accept="image/*" style="font-size:0.8rem; color:var(--text-muted); flex:1;" />
-        <input type="text" id="photoNote" class="short-input" placeholder="Note or names in photo..." />
-        <button class="btn-add-media" id="savePhotoBtn">Upload</button>
-      </div>
-    </div>
-
-    <!-- ROW 3: Add Voice Memo -->
-    <div class="input-row-card">
-      <div class="row-header">
-        <span class="row-label">🎙️ Add Voice Memo</span>
-        <div class="picker-container">
-          <div class="wheel-picker-wrap">
-            <select id="voiceMonth" class="wheel-select">
-              <option value="">Month (Opt)</option>
-              <option value="Jan">Jan</option><option value="Feb">Feb</option><option value="Mar">Mar</option>
-              <option value="Apr">Apr</option><option value="May">May</option><option value="Jun">Jun</option>
-              <option value="Jul">Jul</option><option value="Aug">Aug</option><option value="Sep">Sep</option>
-              <option value="Oct">Oct</option><option value="Nov">Nov</option><option value="Dec">Dec</option>
-            </select>
-            <select id="voiceYear" class="wheel-select"></select>
-          </div>
-        </div>
-      </div>
-      <div class="media-input-inline">
-        <button class="btn-mic" id="recAudioBtn" type="button">🔴 Record Memo</button>
-        <span id="recStatus" style="font-size:0.8rem; color:var(--text-muted);">Ready</span>
-        <input type="text" id="voiceNote" class="short-input" placeholder="Memo title..." />
-        <button class="btn-add-media" id="saveVoiceBtn">Save Memo</button>
-      </div>
-      <audio id="audioPreview" controls class="hidden"></audio>
-    </div>
-
-    <!-- TIMELINE LIST -->
-    <div class="timeline-title-bar">
-      <span>Life Timeline (1974 - 2026)</span>
-    </div>
-
-    <div id="timelineContainer" class="timeline"></div>
+  <main class="container" id="timelineContainer">
+    <!-- Dynamic Year Blocks Inserted Here -->
   </main>
 
-  <!-- SETTINGS MODAL -->
-  <div class="modal-overlay hidden" id="settingsModal">
-    <div class="modal">
-      <div class="modal-title">
-        <span>⚙️ Settings & Legacy Vault</span>
-        <button class="del-btn" id="closeSettingsBtn" style="font-size:1.2rem;">✖</button>
+  <!-- Bottom Input Dock -->
+  <div class="dock-container">
+    <div class="dock-inner">
+      <button class="btn-action btn-mic" id="micBtn" onclick="toggleSpeech()" title="Dictate Story">🎙️</button>
+      <input type="text" class="input-story" id="storyInput" placeholder="Tell a story or add an event..." onkeydown="if(event.key==='Enter') processStory()" />
+      <button class="btn-action" onclick="processStory()" title="Add Event">➔</button>
+    </div>
+  </div>
+
+  <!-- Settings & Vault Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-title">Settings & Vault</div>
+      <div class="field-group">
+        <label for="apiKeyInput">Gemini API Key (Optional for AI Parsing)</label>
+        <input type="password" id="apiKeyInput" placeholder="AIZA..." />
       </div>
-
-      <div class="settings-group">
-        <label>Gemini API Key</label>
-        <input type="password" id="apiKeyInput" class="short-input" placeholder="AIzaSy..." />
-        <button class="btn-add-media" id="saveKeyBtn">Save API Key</button>
-      </div>
-
-      <div class="settings-group">
-        <label>Data Backup & Restore</label>
-        <div style="display:flex; gap:8px;">
-          <button class="btn-add-media" id="exportBtn" style="flex:1;">💾 Export JSON</button>
-          <button class="btn-add-media" id="importBtn" style="flex:1;">📂 Import JSON</button>
-          <input type="file" id="importFileInput" class="hidden" accept=".json" />
-        </div>
-      </div>
-
-      <div class="settings-group">
-        <label>📁 Important Info Vault (Insurance & Life Docs)</label>
-        <p style="font-size:0.78rem; color:var(--text-muted);">Keep life insurance policy photos, estate notes, or voice instructions for your family here.</p>
-
-        <div style="display:flex; flex-direction:column; gap:8px; margin-top:6px;">
-          <input type="text" id="legacyTitle" class="short-input" placeholder="Document Title (e.g., Life Insurance Policy)" />
-          <input type="file" id="legacyPhotoFile" accept="image/*" style="font-size:0.8rem; color:var(--text-muted);" />
-          <button class="btn-add-media" id="addLegacyDocBtn">➕ Add Document to Vault</button>
-        </div>
-
-        <div id="legacyVaultList" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-secondary" onclick="exportData()">Export Data</button>
+        <button class="btn-modal btn-secondary" onclick="closeSettings()">Cancel</button>
+        <button class="btn-modal btn-primary" onclick="saveSettings()">Save</button>
       </div>
     </div>
   </div>
@@ -293,496 +371,248 @@
     const BIRTH_YEAR = 1974;
     const CURRENT_YEAR = 2026;
 
-    let memories = JSON.parse(localStorage.getItem('life_journal_memories') || '[]');
-    let legacyVault = JSON.parse(localStorage.getItem('life_journal_legacy') || '[]');
+    // Default Timeline State from LocalStorage
+    let timelineData = JSON.parse(localStorage.getItem('timelineData')) || {};
+    let apiKey = localStorage.getItem('geminiApiKey') || '';
 
-    let mediaRecorder = null;
-    let audioChunks = [];
-    let recordedAudioBase64 = null;
+    // Initialize Timeline Display
+    function initTimeline() {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '';
 
-    // Elements
-    const timelineContainer = document.getElementById('timelineContainer');
-    const photoYearSelect = document.getElementById('photoYear');
-    const voiceYearSelect = document.getElementById('voiceYear');
-    const settingsModal = document.getElementById('settingsModal');
-    const apiKeyInput = document.getElementById('apiKeyInput');
+      for (let year = CURRENT_YEAR; year >= BIRTH_YEAR; year--) {
+        const age = year - BIRTH_YEAR;
+        const yearData = timelineData[year] || {};
 
-    function initYearWheelPickers() {
-      photoYearSelect.innerHTML = '';
-      voiceYearSelect.innerHTML = '';
-      for (let y = CURRENT_YEAR; y >= BIRTH_YEAR; y--) {
-        const age = y - BIRTH_YEAR;
-        const opt1 = document.createElement('option');
-        opt1.value = y; opt1.textContent = `${y} (Age ${age})`;
-        photoYearSelect.appendChild(opt1);
-
-        const opt2 = document.createElement('option');
-        opt2.value = y; opt2.textContent = `${y} (Age ${age})`;
-        voiceYearSelect.appendChild(opt2);
-      }
-    }
-
-    function renderTimeline() {
-      timelineContainer.innerHTML = '';
-
-      const yearMap = {};
-      memories.forEach(m => {
-        if (!yearMap[m.year]) yearMap[m.year] = [];
-        yearMap[m.year].push(m);
-      });
-
-      for (let y = CURRENT_YEAR; y >= BIRTH_YEAR; y--) {
-        const age = y - BIRTH_YEAR;
-        const yearItems = yearMap[y] || [];
-
-        const yearBlock = document.createElement('div');
-        yearBlock.className = 'year-block';
-        yearBlock.id = `year-block-${y}`;
-
-        yearBlock.innerHTML = `
-          <div class="year-header-tag">
-            <h2>${y}</h2>
-            <span>• Age ${age}</span>
-          </div>
-          <div class="cat-list">
-            <div class="cat-row lived">
-              <span class="cat-label">🏡 Where I Lived</span>
-              <div class="cat-entries" id="entries-${y}-place"></div>
-            </div>
-            <div class="cat-row job">
-              <span class="cat-label">💼 What Job I Had</span>
-              <div class="cat-entries" id="entries-${y}-job"></div>
-            </div>
-            <div class="cat-row trips">
-              <span class="cat-label">✈️ Trips I Took</span>
-              <div class="cat-entries" id="entries-${y}-trip"></div>
-            </div>
-            <div class="cat-row people">
-              <span class="cat-label">👥 Important People</span>
-              <div class="cat-entries" id="entries-${y}-person"></div>
-            </div>
-            <div class="cat-row events">
-              <span class="cat-label">🎉 Important Events</span>
-              <div class="cat-entries" id="entries-${y}-event"></div>
-            </div>
-            <div class="cat-row photos">
-              <span class="cat-label">📸 Photos & Media</span>
-              <div class="cat-entries" id="entries-${y}-photo"></div>
-            </div>
-            <div class="cat-row voice">
-              <span class="cat-label">🎙️ Voice Memos</span>
-              <div class="cat-entries" id="entries-${y}-voice"></div>
-            </div>
-          </div>
+        const card = document.createElement('div');
+        card.className = 'year-card';
+        card.innerHTML = `
+          <div class="year-header">${year} <span>· Age ${age}</span></div>
+          ${renderCategory('WHERE I LIVED', '🏡', 'cat-lived', yearData['WHERE I LIVED'], year)}
+          ${renderCategory('WHAT JOB I HAD', '💼', 'cat-job', yearData['WHAT JOB I HAD'], year)}
+          ${renderCategory('TRIPS I TOOK', '✈️', 'cat-trips', yearData['TRIPS I TOOK'], year)}
+          ${renderCategory('IMPORTANT PEOPLE', '👥', 'cat-people', yearData['IMPORTANT PEOPLE'], year)}
+          ${renderCategory('IMPORTANT EVENTS', '🎉', 'cat-events', yearData['IMPORTANT EVENTS'], year)}
+          ${renderCategory('PHOTOS & MEDIA', '📸', 'cat-photos', yearData['PHOTOS & MEDIA'], year)}
+          ${renderCategory('VOICE MEMOS', '🎙️', 'cat-memos', yearData['VOICE MEMOS'], year)}
         `;
-
-        timelineContainer.appendChild(yearBlock);
-
-        populateSubBox(y, 'place', yearItems.filter(i => i.category === 'place'));
-        populateSubBox(y, 'job', yearItems.filter(i => i.category === 'job'));
-        populateSubBox(y, 'trip', yearItems.filter(i => i.category === 'trip'));
-        populateSubBox(y, 'person', yearItems.filter(i => i.category === 'person'));
-        populateSubBox(y, 'event', yearItems.filter(i => i.category === 'event'));
-        populateSubBox(y, 'photo', yearItems.filter(i => i.category === 'photo'));
-        populateSubBox(y, 'voice', yearItems.filter(i => i.category === 'voice'));
+        container.appendChild(card);
       }
     }
 
-    function populateSubBox(year, catKey, items) {
-      const box = document.getElementById(`entries-${year}-${catKey}`);
-      if (!box) return;
-
-      if (items.length === 0) {
-        box.innerHTML = `<span class="entry-empty">—</span>`;
-        return;
-      }
-
-      box.innerHTML = '';
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'entry-item';
-        const monthBadge = item.month ? `[${item.month}] ` : '';
-        div.innerHTML = `
-          <div>
-            <strong>${monthBadge}${escapeHtml(item.title)}</strong>
-            ${item.details && item.details !== item.title ? `<div style="font-size:0.82rem; color:#cbd5e1;">${escapeHtml(item.details)}</div>` : ''}
-            ${item.photoData ? `<img src="${item.photoData}" class="media-thumb" />` : ''}
-            ${item.audioData ? `<audio src="${item.audioData}" controls></audio>` : ''}
+    function renderCategory(title, emoji, cssClass, entries, year) {
+      let contentHtml = '<div class="empty-placeholder">—</div>';
+      if (entries && entries.length > 0) {
+        contentHtml = entries.map((entry, index) => `
+          <div class="entry-card">
+            <div class="entry-content">
+              <div class="entry-title">${escapeHtml(entry.title)}</div>
+              <div class="entry-desc">${escapeHtml(entry.description)}</div>
+            </div>
+            <button class="btn-delete" onclick="deleteEntry(${year}, '${title}', ${index})" title="Delete">🗑️</button>
           </div>
-          <button class="del-btn" onclick="deleteMemory('${item.id}')">🗑️</button>
-        `;
-        box.appendChild(div);
-      });
-    }
-
-    // Dictation
-    const micBtn = document.getElementById('micBtn');
-    const micText = document.getElementById('micText');
-    const storyInput = document.getElementById('storyInput');
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const rec = new SpeechRec();
-      rec.continuous = false;
-      rec.interimResults = false;
-
-      rec.onstart = () => {
-        micBtn.classList.add('listening');
-        micText.textContent = "I'm listening...";
-      };
-      rec.onend = () => {
-        micBtn.classList.remove('listening');
-        micText.textContent = "Listen";
-      };
-      rec.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        storyInput.value += (storyInput.value ? ' ' : '') + text;
-      };
-
-      micBtn.onclick = () => rec.start();
-    } else {
-      micBtn.style.display = 'none';
-    }
-
-    // AI Parsing Engine
-    document.getElementById('parseAiBtn').onclick = async () => {
-      const text = storyInput.value.trim();
-      if (!text) return alert('Please tell me your story first.');
-
-      const apiKey = localStorage.getItem('gemini_api_key');
-      const parseBtn = document.getElementById('parseAiBtn');
-      parseBtn.textContent = 'Parsing...';
-      parseBtn.disabled = true;
-
-      let items = null;
-
-      if (apiKey && apiKey.length > 5) {
-        try {
-          const prompt = `Birth year: August 21, 1974. Current year: 2026.
-Extract memories into a JSON array of objects.
-
-STRICT RULES:
-1. EXTRACT EXACT YEARS: Look for explicit years (e.g., "2026", "1997", "1981"). Assign memories to their SPECIFIC year. DO NOT default to 1974 unless the event actually happened in 1974.
-2. EXPAND YEAR SPANS: For date spans (e.g. "from 1974 to 1981" or "from age 0 to 7"), create a separate object for EVERY SINGLE YEAR in that span (1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981).
-3. AGE CALCULATIONS: "when I was 32" -> year 2006 (1974 + 32).
-4. CATEGORIES ALLOWED:
-   - "place" (Where I lived)
-   - "job" (What job I had)
-   - "trip" (Trips I took)
-   - "person" (Important people)
-   - "event" (Important events)
-5. CLEAN TITLES: Keep titles short and clean (e.g., "Vancouver, Washington" or "Trip to Spain"). Put full sentences in details.
-
-JSON Structure: [{"year": number, "category": string, "title": string, "details": string}]
-
-Text: "${text}"`;
-
-          const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-          });
-
-          if (resp.ok) {
-            const data = await resp.json();
-            const raw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
-            items = JSON.parse(raw);
-          }
-        } catch (err) {
-          console.warn('API error, switching to local parser:', err);
-        }
+        `).join('');
       }
 
-      if (!items || items.length === 0) items = fallbackLocalParse(text);
-
-      items.forEach(item => {
-        memories.push({
-          id: Date.now().toString() + Math.random().toString().slice(2,6),
-          year: item.year || 2026,
-          category: item.category || 'event',
-          title: item.title || 'Life Story',
-          details: item.details || text
-        });
-      });
-
-      saveAndRender();
-      storyInput.value = '';
-      parseBtn.textContent = '✨ Add Story';
-      parseBtn.disabled = false;
-    };
-
-    // Advanced Multi-Year & Target Year Local Parser
-    function fallbackLocalParse(text) {
-      const lower = text.toLowerCase();
-      const results = [];
-
-      // Category Detection
-      let category = 'event';
-      if (lower.includes('lived') || lower.includes('moved') || lower.includes('vancouver') || lower.includes('reno')) category = 'place';
-      else if (lower.includes('worked') || lower.includes('job') || lower.includes('hired') || lower.includes('usps') || lower.includes('clerk')) category = 'job';
-      else if (lower.includes('trip') || lower.includes('traveled') || lower.includes('spain') || lower.includes('vacation')) category = 'trip';
-      else if (lower.includes('friend') || lower.includes('daughter') || lower.includes('had krystin') || lower.includes('had jesse')) category = 'person';
-
-      // Title Cleaning
-      let title = text.slice(0, 45) + '...';
-      if (category === 'place') {
-        const loc = text.match(/(?:in|to)\s+([A-Za-z\s,]+?)(?=\s+from|\s+between|\s+when|\s+at|\.|$)/i);
-        title = loc ? loc[1].trim() : (lower.includes('vancouver') ? 'Vancouver, Washington' : 'Place Lived');
-      } else if (category === 'trip') {
-        const tripMatch = text.match(/trip\s+to\s+([A-Za-z\s]+)/i);
-        title = tripMatch ? `Trip to ${tripMatch[1].trim()}` : (lower.includes('spain') ? 'Trip to Spain' : 'Trip');
-      }
-
-      // 1. Check for Year Ranges: "from 1974 to 1981", "1974 to 1981"
-      const yearRangeMatch = lower.match(/(?:from\s+)?(19\d\d|20\d\d)\s*(?:to|-|through|until)\s*(19\d\d|20\d\d)/i);
-      
-      // 2. Check for Age Ranges: "from age 7 to 20", "age 0 to 7"
-      const ageRangeMatch = lower.match(/(?:from\s+)?(?:the\s+)?age\s+(?:of\s+)?(\d{1,2})\s*(?:to|-|through|until)\s*(?:the\s+)?(?:age\s+)?(?:of\s+)?(\d{1,2})/i);
-
-      if (yearRangeMatch) {
-        const startY = parseInt(yearRangeMatch[1]);
-        const endY = parseInt(yearRangeMatch[2]);
-        for (let y = Math.min(startY, endY); y <= Math.max(startY, endY); y++) {
-          if (y >= BIRTH_YEAR && y <= CURRENT_YEAR) {
-            results.push({ year: y, category: category, title: title, details: text });
-          }
-        }
-        return results;
-      }
-
-      if (ageRangeMatch) {
-        const startY = BIRTH_YEAR + parseInt(ageRangeMatch[1]);
-        const endY = BIRTH_YEAR + parseInt(ageRangeMatch[2]);
-        for (let y = Math.min(startY, endY); y <= Math.max(startY, endY); y++) {
-          if (y >= BIRTH_YEAR && y <= CURRENT_YEAR) {
-            results.push({ year: y, category: category, title: title, details: text });
-          }
-        }
-        return results;
-      }
-
-      // 3. Extract Specific Mentioned Years (e.g., "2026", "1997", "1974")
-      const yearMatches = [...lower.matchAll(/\b(19\d\d|20\d\d)\b/g)];
-      if (yearMatches.length > 0) {
-        const foundYear = parseInt(yearMatches[yearMatches.length - 1][1]);
-        if (foundYear >= BIRTH_YEAR && foundYear <= CURRENT_YEAR) {
-          results.push({ year: foundYear, category: category, title: title, details: text });
-          return results;
-        }
-      }
-
-      // 4. Check for Single Age
-      const singleAge = lower.match(/(?:when i was|at age|i was)\s+(\d{1,2})/i);
-      if (singleAge) {
-        const targetYear = BIRTH_YEAR + parseInt(singleAge[1]);
-        if (targetYear >= BIRTH_YEAR && targetYear <= CURRENT_YEAR) {
-          results.push({ year: targetYear, category: category, title: title, details: text });
-          return results;
-        }
-      }
-
-      results.push({ year: CURRENT_YEAR, category: category, title: title, details: text });
-      return results;
-    }
-
-    // Photo Upload
-    document.getElementById('savePhotoBtn').onclick = async () => {
-      const yr = parseInt(photoYearSelect.value);
-      const mo = document.getElementById('photoMonth').value;
-      const note = document.getElementById('photoNote').value.trim();
-      const file = document.getElementById('photoFile').files[0];
-
-      if (!file) return alert('Please choose a photo file.');
-
-      const photoData = await new Promise(r => {
-        const reader = new FileReader();
-        reader.onload = () => r(reader.result);
-        reader.readAsDataURL(file);
-      });
-
-      memories.push({
-        id: Date.now().toString(),
-        year: yr,
-        month: mo,
-        category: 'photo',
-        title: note || 'Uploaded Photo',
-        photoData: photoData
-      });
-
-      saveAndRender();
-      document.getElementById('photoNote').value = '';
-      document.getElementById('photoFile').value = '';
-    };
-
-    // Voice Recorder
-    const recAudioBtn = document.getElementById('recAudioBtn');
-    const recStatus = document.getElementById('recStatus');
-    const audioPreview = document.getElementById('audioPreview');
-
-    recAudioBtn.onclick = async () => {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        recAudioBtn.textContent = '🔴 Record Memo';
-        recStatus.textContent = 'Recorded';
-      } else {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioChunks = [];
-          mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-          mediaRecorder.onstop = () => {
-            const blob = new Blob(audioChunks, { type: 'audio/webm' });
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              recordedAudioBase64 = reader.result;
-              audioPreview.src = recordedAudioBase64;
-              audioPreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(blob);
-          };
-          mediaRecorder.start();
-          recAudioBtn.textContent = '⏹️ Stop Recording';
-          recStatus.textContent = 'Recording...';
-        } catch (err) {
-          alert('Microphone access required.');
-        }
-      }
-    };
-
-    document.getElementById('saveVoiceBtn').onclick = () => {
-      const yr = parseInt(voiceYearSelect.value);
-      const mo = document.getElementById('voiceMonth').value;
-      const note = document.getElementById('voiceNote').value.trim();
-
-      if (!recordedAudioBase64) return alert('Please record an audio memo first.');
-
-      memories.push({
-        id: Date.now().toString(),
-        year: yr,
-        month: mo,
-        category: 'voice',
-        title: note || 'Voice Memo',
-        audioData: recordedAudioBase64
-      });
-
-      saveAndRender();
-      recordedAudioBase64 = null;
-      document.getElementById('voiceNote').value = '';
-      audioPreview.classList.add('hidden');
-      recStatus.textContent = 'Ready';
-    };
-
-    // Legacy Vault Documents
-    document.getElementById('addLegacyDocBtn').onclick = async () => {
-      const title = document.getElementById('legacyTitle').value.trim();
-      const file = document.getElementById('legacyPhotoFile').files[0];
-
-      if (!title) return alert('Enter document title.');
-
-      let photoData = null;
-      if (file) {
-        photoData = await new Promise(r => {
-          const reader = new FileReader();
-          reader.onload = () => r(reader.result);
-          reader.readAsDataURL(file);
-        });
-      }
-
-      legacyVault.push({
-        id: Date.now().toString(),
-        title: title,
-        photoData: photoData
-      });
-
-      localStorage.setItem('life_journal_legacy', JSON.stringify(legacyVault));
-      renderLegacyVault();
-      document.getElementById('legacyTitle').value = '';
-      document.getElementById('legacyPhotoFile').value = '';
-    };
-
-    function renderLegacyVault() {
-      const list = document.getElementById('legacyVaultList');
-      list.innerHTML = '';
-      legacyVault.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'legacy-item';
-        div.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong>${escapeHtml(item.title)}</strong>
-            <button class="del-btn" onclick="deleteLegacyItem('${item.id}')">🗑️</button>
-          </div>
-          ${item.photoData ? `<img src="${item.photoData}" class="media-thumb" />` : ''}
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    function deleteLegacyItem(id) {
-      legacyVault = legacyVault.filter(i => i.id !== id);
-      localStorage.setItem('life_journal_legacy', JSON.stringify(legacyVault));
-      renderLegacyVault();
-    }
-
-    function saveAndRender() {
-      localStorage.setItem('life_journal_memories', JSON.stringify(memories));
-      renderTimeline();
-    }
-
-    function deleteMemory(id) {
-      if (confirm('Delete item?')) {
-        memories = memories.filter(m => m.id !== id);
-        saveAndRender();
-      }
+      return `
+        <div class="category-section ${cssClass}">
+          <div class="category-title"><span>${emoji}</span> ${title}</div>
+          ${contentHtml}
+        </div>
+      `;
     }
 
     function escapeHtml(str) {
-      return str ? str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]) : '';
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Modal & Backup
-    document.getElementById('openSettingsBtn').onclick = () => {
-      apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
-      renderLegacyVault();
-      settingsModal.classList.remove('hidden');
-    };
-    document.getElementById('closeSettingsBtn').onclick = () => settingsModal.classList.add('hidden');
-    document.getElementById('saveKeyBtn').onclick = () => {
-      localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
-      alert('API Key saved!');
-    };
+    // Process User Entry
+    async function processStory() {
+      const input = document.getElementById('storyInput');
+      const text = input.value.trim();
+      if (!text) return;
 
-    document.getElementById('exportBtn').onclick = () => {
-      const backup = { memories, legacyVault };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
-      const a = document.createElement('a');
-      a.href = dataStr;
-      a.download = `life_journal_full_backup_${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-    };
+      input.value = '';
+      input.placeholder = 'Analyzing...';
 
-    document.getElementById('importBtn').onclick = () => document.getElementById('importFileInput').click();
-    document.getElementById('importFileInput').onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        try {
-          const data = JSON.parse(evt.target.result);
-          if (data.memories) memories = data.memories;
-          if (data.legacyVault) legacyVault = data.legacyVault;
-          saveAndRender();
-          renderLegacyVault();
-          alert('Full backup imported successfully!');
-        } catch (err) {
-          alert('Invalid backup format.');
+      let parsedEvents = [];
+      if (apiKey) {
+        parsedEvents = await parseWithGemini(text);
+      } else {
+        parsedEvents = parseFallback(text);
+      }
+
+      parsedEvents.forEach(evt => {
+        if (!timelineData[evt.year]) timelineData[evt.year] = {};
+        if (!timelineData[evt.year][evt.category]) timelineData[evt.year][evt.category] = [];
+        timelineData[evt.year][evt.category].push({
+          title: evt.title,
+          description: evt.description
+        });
+      });
+
+      saveTimeline();
+      initTimeline();
+      input.placeholder = 'Tell a story or add an event...';
+    }
+
+    // AI Parser via Gemini API
+    async function parseWithGemini(userText) {
+      const systemPrompt = `
+You are a life journal timeline parser. Parse the user's input into structured JSON events.
+
+CATEGORY DISAMBIGUATION RULES (INTENT PRIORITY):
+1. IMPORTANT EVENTS takes priority over location keywords if the statement describes a milestone, ceremony, life achievement, medical event, graduation, birth, or life change (e.g., "graduated high school in Reno Nevada", "got married in Reno"). Mentioning a city or state inside an event statement does NOT make it a "WHERE I LIVED" entry.
+2. WHERE I LIVED is strictly reserved for statements explicitly about moving, residing, or living in a place over time (e.g., "Moved to Reno", "Lived in Seattle from 1990 to 1995").
+3. WHAT JOB I HAD takes priority if the primary action is employment or working at a company.
+4. TRIPS I TOOK takes priority if the action is a vacation, tour, or short visit.
+5. IMPORTANT PEOPLE takes priority if the statement introduces family, partners, or friends.
+
+Respond ONLY with valid JSON in this exact structure:
+{
+  "events": [
+    {
+      "year": YYYY,
+      "category": "IMPORTANT EVENTS" | "WHERE I LIVED" | "WHAT JOB I HAD" | "TRIPS I TOOK" | "IMPORTANT PEOPLE",
+      "title": "Short descriptive title",
+      "description": "Full details"
+    }
+  ]
+}
+`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${systemPrompt}\nInput Text: "${userText}"` }] }]
+          })
+        });
+
+        const data = await response.json();
+        const rawResponse = data.candidates[0].content.parts[0].text;
+        const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return parsed.events || [];
         }
-      };
-      reader.readAsText(file);
-    };
+      } catch (err) {
+        console.error('Gemini API Error, using fallback parser:', err);
+      }
+      return parseFallback(userText);
+    }
 
-    // Initialize
-    initYearWheelPickers();
-    renderTimeline();
+    // Client-side Rule Engine (Fallback Parser)
+    function parseFallback(text) {
+      const yearMatch = text.match(/\b(19\d\d|20\d\d)\b/);
+      const year = yearMatch ? parseInt(yearMatch[1]) : CURRENT_YEAR;
+
+      let category = 'IMPORTANT EVENTS';
+      let title = 'Event';
+
+      const lower = text.toLowerCase();
+
+      // Rule Disambiguation Priority Checklist
+      if (lower.includes('graduat') || lower.includes('married') || lower.includes('born') || lower.includes('had ') || lower.includes('degree')) {
+        category = 'IMPORTANT EVENTS';
+        title = lower.includes('graduat') ? 'High School Graduation' : 'Life Event';
+      } else if (lower.includes('lived in') || lower.includes('moved to') || lower.includes('bought home')) {
+        category = 'WHERE I LIVED';
+        title = 'Place Lived';
+      } else if (lower.includes('worked') || lower.includes('job') || lower.includes('hired') || lower.includes('clerk')) {
+        category = 'WHAT JOB I HAD';
+        title = 'Job';
+      } else if (lower.includes('trip') || lower.includes('visited') || lower.includes('flew to') || lower.includes('vacation')) {
+        category = 'TRIPS I TOOK';
+        title = 'Trip';
+      }
+
+      return [{
+        year: year,
+        category: category,
+        title: title,
+        description: text
+      }];
+    }
+
+    // Storage Management
+    function saveTimeline() {
+      localStorage.setItem('timelineData', JSON.stringify(timelineData));
+    }
+
+    function deleteEntry(year, category, index) {
+      if (timelineData[year] && timelineData[year][category]) {
+        timelineData[year][category].splice(index, 1);
+        saveTimeline();
+        initTimeline();
+      }
+    }
+
+    // Voice Dictation Implementation
+    let recognition;
+    function toggleSpeech() {
+      const micBtn = document.getElementById('micBtn');
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (!SpeechRecognition) {
+        alert('Speech recognition is not supported in this browser.');
+        return;
+      }
+
+      if (recognition && recognition.isStarted) {
+        recognition.stop();
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.isStarted = true;
+
+      micBtn.classList.add('recording');
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('storyInput').value = transcript;
+        micBtn.classList.remove('recording');
+        recognition.isStarted = false;
+      };
+
+      recognition.onerror = recognition.onend = () => {
+        micBtn.classList.remove('recording');
+        if (recognition) recognition.isStarted = false;
+      };
+
+      recognition.start();
+    }
+
+    // Settings Modal
+    function openSettings() {
+      document.getElementById('apiKeyInput').value = apiKey;
+      document.getElementById('settingsModal').style.display = 'flex';
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').style.display = 'none';
+    }
+
+    function saveSettings() {
+      apiKey = document.getElementById('apiKeyInput').value.trim();
+      localStorage.setItem('geminiApiKey', apiKey);
+      closeSettings();
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(timelineData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `life-journal-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    // Startup
+    initTimeline();
   </script>
 </body>
 </html>
