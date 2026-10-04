@@ -1,700 +1,714 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Life Journal & Timeline</title>
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --accent-primary: #38bdf8;
-      --accent-hover: #0284c7;
-      --accent-subtle: rgba(56, 189, 248, 0.15);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --badge-photo: #f43f5e;
-      --badge-place: #10b981;
-      --badge-job: #f59e0b;
-      --badge-trip: #06b6d4;
-      --badge-event: #8b5cf6;
-      --badge-person: #ec4899;
-      --badge-pet: #84cc16;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      background: var(--accent-subtle);
-      color: var(--accent-primary);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn:hover {
-      background: var(--accent-primary);
-      color: #0f172a;
-    }
-
-    .btn-primary {
-      background: var(--accent-primary);
-      color: #0f172a;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      color: #ffffff;
-    }
-
-    /* Year Navigation Ribbon */
-    .year-ribbon-container {
-      background: rgba(30, 41, 59, 0.5);
-      border-bottom: 1px solid var(--card-border);
-      padding: 10px 0;
-      overflow-x: auto;
-      white-space: nowrap;
-      scrollbar-width: thin;
-      position: sticky;
-      top: 57px;
-      z-index: 40;
-      backdrop-filter: blur(8px);
-    }
-
-    .year-ribbon {
-      display: flex;
-      gap: 8px;
-      padding: 0 16px;
-    }
-
-    .year-chip {
-      padding: 6px 14px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-      border: 1px solid transparent;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 64px;
-    }
-
-    .year-chip .sub-age {
-      font-size: 0.65rem;
-      opacity: 0.7;
-      font-weight: 400;
-    }
-
-    .year-chip.active, .year-chip:hover {
-      background: var(--accent-primary);
-      color: #0f172a;
-      border-color: var(--accent-primary);
-    }
-
-    .year-chip.active .sub-age, .year-chip:hover .sub-age {
-      opacity: 0.9;
-    }
-
-    /* Main Content Container */
-    main {
-      max-width: 800px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 24px 16px 100px;
-      flex: 1;
-    }
-
-    /* Input Card Container */
-    .input-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .input-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .input-header h2 {
-      font-size: 1.1rem;
-      color: var(--text-main);
-    }
-
-    .voice-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      animation: none;
-    }
-
-    .voice-btn.recording {
-      animation: pulse 1.5s infinite;
-      background: #dc2626;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    @media (max-width: 600px) {
-      .form-grid {
-        grid-template-columns: 1fr;
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#0f172a',
+              900: '#0b0f19',
+              950: '#030712',
+            }
+          }
+        }
       }
     }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
     }
 
-    .form-group.full-width {
-      grid-column: 1 / -1;
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      font-weight: 600;
+    .glass-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    input, select, textarea {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s;
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent-primary);
-    }
-
-    .year-calc-badge {
-      font-size: 0.75rem;
-      color: var(--accent-primary);
-      margin-top: 2px;
-    }
-
-    /* Timeline Cards */
-    .timeline {
-      position: relative;
-      padding-left: 20px;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--accent-primary), rgba(255, 255, 255, 0.05));
-    }
-
-    .year-section {
-      margin-bottom: 32px;
-      position: relative;
-    }
-
-    .year-heading {
-      position: sticky;
-      top: 105px;
-      z-index: 10;
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      background: var(--bg-color);
-      padding: 4px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      margin-left: -20px;
-      margin-bottom: 16px;
-    }
-
-    .year-heading h3 {
-      font-size: 1.2rem;
-      color: var(--accent-primary);
-    }
-
-    .year-heading span {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .memory-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      position: relative;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .memory-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .category-tag {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 6px;
-      color: #fff;
-    }
-
-    .tag-photo { background: var(--badge-photo); }
-    .tag-place { background: var(--badge-place); }
-    .tag-job { background: var(--badge-job); }
-    .tag-trip { background: var(--badge-trip); }
-    .tag-event { background: var(--badge-event); }
-    .tag-person { background: var(--badge-person); }
-    .tag-pet { background: var(--badge-pet); }
-
-    .card-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .delete-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .delete-btn:hover {
-      color: #ef4444;
-    }
-
-    .memory-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-main);
-    }
-
-    .memory-desc {
-      font-size: 0.9rem;
-      color: #cbd5e1;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    .memory-img {
-      width: 100%;
-      max-height: 350px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-top: 10px;
-      border: 1px solid var(--card-border);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-    }
-
-    /* Modal / Utility */
-    .hidden {
-      display: none !important;
+    .recording-pulse {
+      animation: pulse-ring 1.8s infinite;
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-white">
 
-  <header>
-    <div class="logo">Life Timeline Journal</div>
-    <div class="header-actions">
-      <button class="btn" id="exportBtn">Export JSON</button>
-      <button class="btn" id="importBtn">Import JSON</button>
-      <input type="file" id="importFile" class="hidden" accept=".json" />
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-sky-500/20">
+        📖
+      </div>
+      <div>
+        <h1 class="font-bold text-base md:text-xl tracking-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">
+          Life Journal & Timeline
+        </h1>
+        <p class="text-xs text-slate-400 font-medium">Born August 1974 • Digital Legacy</p>
+      </div>
+    </div>
+
+    <!-- API Key Status and Main Control Action Buttons -->
+    <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+      <!-- Status Badge -->
+      <div id="apiKeyStatusBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span>Key Missing</span>
+      </div>
+
+      <!-- Highly Visible API Key Button -->
+      <button id="openApiKeyBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/20 transition flex items-center gap-1.5 cursor-pointer">
+        <span>⚙️</span>
+        <span>Set API Key</span>
+      </button>
+
+      <button id="exportBtn" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 transition flex items-center gap-1">
+        <span>💾</span> <span class="hidden sm:inline">Export</span>
+      </button>
+      <button id="importBtn" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-slate-700 transition flex items-center gap-1">
+        <span>📥</span> <span class="hidden sm:inline">Import</span>
+      </button>
+      <input type="file" id="importFileInput" accept=".json" class="hidden" />
     </div>
   </header>
 
   <!-- Horizontal Scrollable Year Ribbon -->
-  <div class="year-ribbon-container">
-    <div class="year-ribbon" id="yearRibbon"></div>
-  </div>
+  <nav class="sticky top-[61px] z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 py-2.5 px-3 overflow-x-auto shadow-inner">
+    <div id="yearRibbon" class="flex space-x-2 min-w-max px-2">
+      <!-- Year chips dynamically populated via JS -->
+    </div>
+  </nav>
 
-  <main>
-    <!-- Simple Input Panel -->
-    <div class="input-panel">
-      <div class="input-header">
-        <h2>Add Memory</h2>
-        <button class="voice-btn" id="voiceBtn">
-          <span>🎙️ Voice Input</span>
+  <!-- Main App Layout Container -->
+  <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-1 space-y-8">
+
+    <!-- Input Studio Container -->
+    <section class="glass-panel rounded-2xl p-5 shadow-2xl border border-slate-800">
+      
+      <!-- Studio Tabs Navigation -->
+      <div class="flex border-b border-slate-800 pb-3 mb-4 gap-2 overflow-x-auto">
+        <button id="tabAi" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20" onclick="switchTab('ai')">
+          <span>✨</span> AI Story Deciphering
+        </button>
+        <button id="tabAudio" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2" onclick="switchTab('audio')">
+          <span>🎙️</span> Record Voice Note
+        </button>
+        <button id="tabManual" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2" onclick="switchTab('manual')">
+          <span>📸</span> Photo & Manual Entry
         </button>
       </div>
 
-      <form id="memoryForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="category">Category</label>
-            <select id="category" required>
-              <option value="photo">📸 Photo & Person</option>
-              <option value="place">🏡 Place Lived</option>
-              <option value="job">💼 Job / Career</option>
-              <option value="trip">✈️ Trip / Travel</option>
-              <option value="event">🎉 Important Event</option>
-              <option value="person">👥 Important Person / Friend</option>
-              <option value="pet">🐾 Pet</option>
-            </select>
+      <!-- TAB 1: Gemini AI Story & Speech Deciphering -->
+      <div id="panelAi" class="space-y-4">
+        <div class="bg-slate-900/80 rounded-xl p-3.5 border border-slate-800/80 text-xs text-slate-300 space-y-1">
+          <div class="flex items-center gap-2 text-sky-400 font-semibold">
+            <span>💡 How AI Memory Deciphering Works</span>
+          </div>
+          <p class="text-slate-400">
+            Talk or write freely about your life! Say things like: <em class="text-slate-200">"I was born in 1974. I had my daughter Krystin in 1997. In 2006 when I was 32 I moved to Vancouver and worked at USPS."</em> Gemini AI automatically categorizes your memories and calculates your exact age for each year.
+          </p>
+        </div>
+
+        <div class="relative">
+          <textarea id="aiStoryInput" rows="4" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition" placeholder="Talk or write your memories here... (e.g., 'When I was 20 I took a road trip to California with Mike...')"></textarea>
+          
+          <button id="aiSpeechDictateBtn" class="absolute right-3 bottom-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+            <span id="speechIcon">🎙️</span> <span id="speechText">Speech Dictate</span>
+          </button>
+        </div>
+
+        <button id="parseWithAiBtn" class="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:from-sky-400 hover:to-purple-500 text-white shadow-lg shadow-indigo-500/25 transition flex items-center justify-center gap-2">
+          <span>✨</span> Parse Life Story into Timeline Cards (Gemini AI)
+        </button>
+
+        <!-- AI Extraction Preview Confirmation Area -->
+        <div id="aiPreviewBox" class="hidden bg-slate-900/90 rounded-xl p-4 border border-indigo-500/30 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
+              <span>🤖</span> Extracted Memory Preview
+            </h4>
+            <span id="extractedCountBadge" class="text-xs bg-indigo-500/20 text-indigo-300 font-bold px-2 py-0.5 rounded-full">0 found</span>
           </div>
 
-          <div class="form-group">
-            <label for="yearInput">Year / Age Picker</label>
-            <select id="yearInput" required></select>
-            <div class="year-calc-badge" id="yearAgeCalc">Age: 0</div>
+          <div id="extractedList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <!-- Dynamically populated AI extracted cards -->
           </div>
 
-          <div class="form-group full-width" id="photoGroup">
-            <label for="photoFile">Upload Photo</label>
-            <input type="file" id="photoFile" accept="image/*" />
+          <div class="flex gap-2 pt-2">
+            <button id="confirmAiBtn" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition">
+              ✅ Save All to Timeline
+            </button>
+            <button id="cancelAiBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
+              Discard
+            </button>
           </div>
+        </div>
+      </div>
 
-          <div class="form-group full-width">
-            <label for="titleInput" id="titleLabel">Title / Name</label>
-            <input type="text" id="titleInput" placeholder="e.g., Moved to Vancouver, Started USPS, Pet name..." required />
+      <!-- TAB 2: Audio Voice Note Recorder -->
+      <div id="panelAudio" class="hidden space-y-4">
+        <div class="text-xs text-slate-400">
+          Record a personal voice clip. The audio clip will be embedded directly into your chosen year's timeline card.
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 flex flex-col items-center justify-center space-y-4">
+          <div id="recTimer" class="text-2xl font-mono font-bold text-slate-300">00:00</div>
+          
+          <button id="recordToggleBtn" class="w-16 h-16 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-rose-600/30 transition transform active:scale-95">
+            🎙️
+          </button>
+          <div id="recStatus" class="text-xs font-medium text-slate-400">Click microphone to start recording</div>
+
+          <audio id="audioPreview" controls class="hidden w-full max-w-md mt-2"></audio>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Target Year / Age</label>
+            <select id="audioYearSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500"></select>
           </div>
-
-          <div class="form-group full-width">
-            <label for="detailsInput">Memory / Details</label>
-            <textarea id="detailsInput" rows="3" placeholder="Talk or write about this memory..."></textarea>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Voice Note Title</label>
+            <input type="text" id="audioTitleInput" placeholder="e.g., Reflections on turning 30" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500" />
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
-          ➕ Save to Timeline
+        <button id="saveVoiceClipBtn" disabled class="w-full py-2.5 px-4 rounded-xl font-bold text-sm bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white shadow-md transition">
+          💾 Save Voice Memory to Timeline
         </button>
-      </form>
+      </div>
+
+      <!-- TAB 3: Photo & Manual Memory Entry -->
+      <div id="panelManual" class="hidden space-y-4">
+        <form id="manualForm" class="space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Category</label>
+              <select id="manualCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500">
+                <option value="photo">📸 Photo & Person</option>
+                <option value="place">🏡 Place Lived</option>
+                <option value="job">💼 Job / Career</option>
+                <option value="trip">✈️ Trip / Travel</option>
+                <option value="event">🎉 Important Event</option>
+                <option value="person">👥 Important Person / Friend</option>
+                <option value="pet">🐾 Pet</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Target Year / Age</label>
+              <select id="manualYearSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500"></select>
+            </div>
+          </div>
+
+          <div id="photoUploadGroup" class="space-y-1">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Upload Photo from Gallery</label>
+            <input type="file" id="photoInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-sky-400 hover:file:bg-slate-700 bg-slate-900 border border-slate-800 rounded-xl p-1" />
+          </div>
+
+          <div>
+            <label id="manualTitleLabel" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Title / Subject Name</label>
+            <input type="text" id="manualTitle" placeholder="e.g., Moved to Vancouver or Daughter Krystin" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Memory Details / Notes</label>
+            <textarea id="manualDetails" rows="2" placeholder="Write a description or story..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-sky-500"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl font-bold text-sm bg-sky-600 hover:bg-sky-500 text-white shadow-md transition">
+            ➕ Add Entry to Timeline
+          </button>
+        </form>
+      </div>
+
+    </section>
+
+    <!-- Timeline Filter Toolbar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Filter:</span>
+        <select id="filterCategory" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none">
+          <option value="all">All Categories</option>
+          <option value="photo">📸 Photos</option>
+          <option value="place">🏡 Places</option>
+          <option value="job">💼 Jobs</option>
+          <option value="trip">✈️ Trips</option>
+          <option value="event">🎉 Events</option>
+          <option value="person">👥 People</option>
+          <option value="pet">🐾 Pets</option>
+          <option value="audio">🎙️ Voice Notes</option>
+        </select>
+      </div>
+
+      <div class="text-xs text-slate-400 font-semibold" id="totalMemoriesCount">
+        0 Memories Logged
+      </div>
     </div>
 
-    <!-- Timeline Journal View -->
-    <div id="timelineContainer" class="timeline"></div>
+    <!-- Main Timeline Cards Container -->
+    <section id="timelineContainer" class="relative pl-4 sm:pl-6 space-y-8 border-l-2 border-slate-800">
+      <!-- Dynamic Year Sections & Memory Cards -->
+    </section>
+
   </main>
 
+  <!-- Dedicated API Key Modal -->
+  <div id="apiKeyModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-panel max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center gap-2">
+          <span>⚙️</span> Gemini API Key Settings
+        </h3>
+        <button id="closeApiKeyBtn" class="text-slate-400 hover:text-slate-200 text-lg p-1">✕</button>
+      </div>
+
+      <p id="apiKeyModalNotice" class="text-xs text-slate-300 leading-relaxed">
+        To enable automatic AI story deciphering, paste your Google Gemini API key below. The key is stored locally and securely in your browser.
+      </p>
+
+      <div class="space-y-1">
+        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Paste Gemini API Key</label>
+        <div class="relative">
+          <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 focus:outline-none focus:border-amber-500 pr-10" />
+          <button id="toggleShowKeyBtn" type="button" class="absolute right-3 top-3 text-xs text-slate-400 hover:text-slate-200">👁️</button>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-slate-400 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+        📌 Don't have a key? Get a free key at <a href="https://aistudio.google.com" target="_blank" class="text-sky-400 underline font-semibold">aistudio.google.com</a>.
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button id="saveApiKeyBtn" class="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-md">
+          Save API Key
+        </button>
+        <button id="clearApiKeyBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-rose-400 rounded-xl text-xs font-semibold transition">
+          Clear Key
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // User Anchor Configuration
     const BIRTH_YEAR = 1974;
     const BIRTH_MONTH = 7; // August (0-indexed: 7)
     const CURRENT_YEAR = new Date().getFullYear();
 
-    // Data Store
-    let memories = JSON.parse(localStorage.getItem('life_journal_memories') || '[]');
+    let memories = JSON.parse(localStorage.getItem('life_journal_memories_v2') || '[]');
+    let userApiKey = localStorage.getItem('gemini_api_key') || '';
+    let pendingAiMemories = [];
 
-    // DOM Elements
-    const yearRibbon = document.getElementById('yearRibbon');
-    const yearSelect = document.getElementById('yearInput');
-    const yearAgeCalc = document.getElementById('yearAgeCalc');
-    const categorySelect = document.getElementById('category');
-    const photoGroup = document.getElementById('photoGroup');
-    const titleLabel = document.getElementById('titleLabel');
-    const memoryForm = document.getElementById('memoryForm');
-    const timelineContainer = document.getElementById('timelineContainer');
-    const voiceBtn = document.getElementById('voiceBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const importBtn = document.getElementById('importBtn');
-    const importFile = document.getElementById('importFile');
+    // Audio Recorder State
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recordedAudioBlob = null;
+    let recordedAudioBase64 = null;
+    let recTimerInterval = null;
+    let recSeconds = 0;
 
-    // Populate Year Ribbon & Select Options
-    function initYearPickers() {
-      yearRibbon.innerHTML = '';
-      yearSelect.innerHTML = '';
+    document.addEventListener('DOMContentLoaded', () => {
+      initYearRibbonAndSelects();
+      setupCategoryLabels();
+      renderTimeline();
+      setupAudioRecorder();
+      setupSpeechRecognition();
+      setupEventListeners();
+      updateApiKeyStatusUI();
+    });
 
-      for (let yr = BIRTH_YEAR; yr <= CURRENT_YEAR; yr++) {
+    function initYearRibbonAndSelects() {
+      const ribbon = document.getElementById('yearRibbon');
+      const manualSelect = document.getElementById('manualYearSelect');
+      const audioSelect = document.getElementById('audioYearSelect');
+
+      ribbon.innerHTML = '';
+      manualSelect.innerHTML = '';
+      audioSelect.innerHTML = '';
+
+      // Populate year selects (descending)
+      for (let yr = CURRENT_YEAR; yr >= BIRTH_YEAR; yr--) {
         const age = yr - BIRTH_YEAR;
 
-        // Populate Select
-        const option = document.createElement('option');
-        option.value = yr;
-        option.textContent = `${yr} (Age ${age})`;
-        if (yr === CURRENT_YEAR) option.selected = true;
-        yearSelect.appendChild(option);
+        const opt1 = document.createElement('option');
+        opt1.value = yr;
+        opt1.textContent = `${yr} (Age ~${age})`;
+        manualSelect.appendChild(opt1);
 
-        // Populate Ribbon Chip
-        const chip = document.createElement('div');
-        chip.className = `year-chip ${yr === CURRENT_YEAR ? 'active' : ''}`;
+        const opt2 = document.createElement('option');
+        opt2.value = yr;
+        opt2.textContent = `${yr} (Age ~${age})`;
+        audioSelect.appendChild(opt2);
+      }
+
+      // Build Ribbon chronologically (1974 -> Current Year)
+      for (let yr = BIRTH_YEAR; yr <= CURRENT_YEAR; yr++) {
+        const age = yr - BIRTH_YEAR;
+        const chip = document.createElement('button');
+        chip.className = `px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-semibold flex flex-col items-center min-w-[62px] transition hover:border-sky-500 hover:bg-slate-800 text-slate-400`;
         chip.dataset.year = yr;
-        chip.innerHTML = `<span>${yr}</span><span class="sub-age">Age ${age}</span>`;
-        chip.addEventListener('click', () => {
-          document.querySelectorAll('.year-chip').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-          scrollToYear(yr);
-        });
-        yearRibbon.appendChild(chip);
+        chip.innerHTML = `<span class="text-slate-200">${yr}</span><span class="text-[10px] text-slate-500">Age ${age}</span>`;
+        chip.onclick = () => scrollToYear(yr);
+        ribbon.appendChild(chip);
       }
-      updateAgeDisplay();
     }
 
-    function scrollToYear(year) {
-      const el = document.getElementById(`year-section-${year}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function scrollToYear(yr) {
+      const target = document.getElementById(`year-section-${yr}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function updateApiKeyStatusUI() {
+      const badge = document.getElementById('apiKeyStatusBadge');
+      if (userApiKey && userApiKey.trim().length > 5) {
+        badge.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>Key Configured</span>`;
       } else {
-        // If year section doesn't exist yet, scroll to timeline top
-        timelineContainer.scrollIntoView({ behavior: 'smooth' });
+        badge.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>Key Missing</span>`;
       }
     }
 
-    function updateAgeDisplay() {
-      const selectedYear = parseInt(yearSelect.value);
-      const age = selectedYear - BIRTH_YEAR;
-      yearAgeCalc.textContent = `Year ${selectedYear} • Age approximately ${age}`;
+    function openApiKeyModal(customNotice) {
+      if (customNotice) {
+        document.getElementById('apiKeyModalNotice').textContent = customNotice;
+      }
+      document.getElementById('apiKeyInput').value = userApiKey;
+      document.getElementById('apiKeyModal').classList.remove('hidden');
     }
 
-    yearSelect.addEventListener('change', updateAgeDisplay);
-
-    // Dynamic Category Fields Adjustments
-    categorySelect.addEventListener('change', () => {
-      const cat = categorySelect.value;
-      if (cat === 'photo') {
-        photoGroup.classList.remove('hidden');
-        titleLabel.textContent = 'Person / Subject Name';
-      } else {
-        photoGroup.classList.add('hidden');
-        if (cat === 'place') titleLabel.textContent = 'Location / City / Address';
-        else if (cat === 'job') titleLabel.textContent = 'Job Title / Workplace';
-        else if (cat === 'trip') titleLabel.textContent = 'Destination / Trip Name';
-        else if (cat === 'person') titleLabel.textContent = 'Person Name';
-        else if (cat === 'pet') titleLabel.textContent = 'Pet Name / Species';
-        else titleLabel.textContent = 'Event Title';
+    async function parseStoryWithGemini(userStoryText) {
+      if (!userStoryText.trim()) {
+        alert("Please write or dictate some memories first.");
+        return;
       }
-    });
 
-    // Voice Input & Natural Language Age/Year AI Parser
-    let recognition = null;
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRec();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
+      if (!userApiKey || userApiKey.trim().length < 5) {
+        openApiKeyModal("⚠️ Please set your Gemini API key first to enable AI deciphering!");
+        return;
+      }
 
-      recognition.onstart = () => voiceBtn.classList.add('recording');
-      recognition.onend = () => voiceBtn.classList.remove('recording');
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        document.getElementById('detailsInput').value += (document.getElementById('detailsInput').value ? ' ' : '') + transcript;
-        parseSpeechForYearAndCategory(transcript);
+      const systemPrompt = `You are a life story memory extractor for a person born in August 1974. 
+Given continuous story text or transcribed dictation, extract discrete life events.
+Return a valid JSON ARRAY of objects. Each object must have:
+- "year": integer (calculated based on explicit years mentioned e.g. 1997, or calculated from spoken age: birth year 1974 + age. If age is 32, year is 2006).
+- "category": string, exactly one of: ['photo','place','job','trip','event','person','pet']
+- "title": short concise title (e.g., "Daughter Krystin Born", "Moved to Vancouver", "Started USPS Job")
+- "details": concise clean description of the memory.
+
+Be accurate with dates relative to birth year 1974.`;
+
+      const payload = {
+        contents: [{ role: "user", parts: [{ text: userStoryText }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                year: { type: "INTEGER" },
+                category: { type: "STRING" },
+                title: { type: "STRING" },
+                details: { type: "STRING" }
+              },
+              required: ["year", "category", "title", "details"]
+            }
+          }
+        }
       };
 
-      voiceBtn.addEventListener('click', () => {
-        if (voiceBtn.classList.contains('recording')) {
-          recognition.stop();
+      const parseBtn = document.getElementById('parseWithAiBtn');
+      const originalText = parseBtn.innerHTML;
+      parseBtn.disabled = true;
+      parseBtn.innerHTML = `<span>⏳</span> Analyzing with Gemini AI...`;
+
+      try {
+        let response = await fetchWithRetry(apiUrl, payload);
+        let result = await response.json();
+
+        let jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!jsonText) throw new Error("No response content received from Gemini.");
+
+        let parsedArray = JSON.parse(jsonText);
+        if (Array.isArray(parsedArray) && parsedArray.length > 0) {
+          pendingAiMemories = parsedArray.map(item => ({
+            id: 'mem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+            year: item.year || 1974,
+            age: (item.year || 1974) - BIRTH_YEAR,
+            category: item.category || 'event',
+            title: item.title || 'Extracted Memory',
+            details: item.details || '',
+            createdAt: new Date().toISOString()
+          }));
+
+          displayAiPreview(pendingAiMemories);
         } else {
-          recognition.start();
+          alert("Gemini parsed the text, but couldn't find specific timeline events. Try mentioning years or ages!");
         }
+      } catch (err) {
+        console.error("Gemini API Error:", err);
+        alert("Failed to analyze story with Gemini AI: " + err.message + "\nPlease verify your API key using the ⚙️ Set API Key button.");
+      } finally {
+        parseBtn.disabled = false;
+        parseBtn.innerHTML = originalText;
+      }
+    }
+
+    async function fetchWithRetry(url, payload, retries = 3, delay = 1000) {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) return res;
+          if (res.status === 429 || res.status >= 500) {
+            await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+            continue;
+          }
+          throw new Error(`HTTP Error ${res.status}`);
+        } catch (e) {
+          if (i === retries - 1) throw e;
+          await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+        }
+      }
+    }
+
+    function displayAiPreview(list) {
+      const box = document.getElementById('aiPreviewBox');
+      const container = document.getElementById('extractedList');
+      const badge = document.getElementById('extractedCountBadge');
+
+      badge.textContent = `${list.length} item(s) found`;
+      container.innerHTML = '';
+
+      list.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs flex justify-between items-start gap-2';
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sky-400">${item.year} (Age ${item.age})</span>
+              <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">${item.category}</span>
+            </div>
+            <div class="font-semibold text-slate-100 mt-1">${escapeHtml(item.title)}</div>
+            <div class="text-slate-400 text-[11px] mt-0.5">${escapeHtml(item.details)}</div>
+          </div>
+          <button onclick="removePendingAiItem(${idx})" class="text-slate-500 hover:text-rose-400 p-1">✕</button>
+        `;
+        container.appendChild(div);
       });
-    } else {
-      voiceBtn.style.display = 'none';
+
+      box.classList.remove('hidden');
     }
 
-    // Smart Speech Parser (Deciphers Spoken Age & Year Logic)
-    function parseSpeechForYearAndCategory(text) {
-      const lower = text.toLowerCase();
-
-      // Look for Age references: "when I was 32", "at age 25", "I was 30"
-      const ageMatch = lower.match(/(?:when i was|at age|i was)\s+(\d{1,2})/i);
-      if (ageMatch) {
-        const spokenAge = parseInt(ageMatch[1]);
-        const calculatedYear = BIRTH_YEAR + spokenAge;
-        if (calculatedYear >= BIRTH_YEAR && calculatedYear <= CURRENT_YEAR) {
-          yearSelect.value = calculatedYear;
-          updateAgeDisplay();
-        }
+    function removePendingAiItem(index) {
+      pendingAiMemories.splice(index, 1);
+      if (pendingAiMemories.length === 0) {
+        document.getElementById('aiPreviewBox').classList.add('hidden');
+      } else {
+        displayAiPreview(pendingAiMemories);
       }
-
-      // Look for Direct Year references: "in 2006", "back in 1998"
-      const yearMatch = lower.match(/\b(19\d\d|20\d\d)\b/);
-      if (yearMatch) {
-        const spokenYear = parseInt(yearMatch[1]);
-        if (spokenYear >= BIRTH_YEAR && spokenYear <= CURRENT_YEAR) {
-          yearSelect.value = spokenYear;
-          updateAgeDisplay();
-        }
-      }
-
-      // Infer Category keywords
-      if (lower.includes('moved to') || lower.includes('lived in') || lower.includes('house')) {
-        categorySelect.value = 'place';
-      } else if (lower.includes('worked at') || lower.includes('job') || lower.includes('hired')) {
-        categorySelect.value = 'job';
-      } else if (lower.includes('traveled') || lower.includes('trip') || lower.includes('flight') || lower.includes('visited')) {
-        categorySelect.value = 'trip';
-      } else if (lower.includes('cat') || lower.includes('dog') || lower.includes('pet')) {
-        categorySelect.value = 'pet';
-      }
-      categorySelect.dispatchEvent(new Event('change'));
     }
 
-    // Save Memory Form
-    memoryForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    function setupAudioRecorder() {
+      const recBtn = document.getElementById('recordToggleBtn');
+      const saveBtn = document.getElementById('saveVoiceClipBtn');
 
-      const category = categorySelect.value;
-      const year = parseInt(yearSelect.value);
-      const title = document.getElementById('titleInput').value.trim();
-      const details = document.getElementById('detailsInput').value.trim();
-      const photoFileInput = document.getElementById('photoFile');
-
-      let photoData = null;
-      if (category === 'photo' && photoFileInput.files && photoFileInput.files[0]) {
-        photoData = await convertFileToBase64(photoFileInput.files[0]);
-      }
-
-      const newMemory = {
-        id: Date.now().toString(),
-        category,
-        year,
-        age: year - BIRTH_YEAR,
-        title,
-        details,
-        photoData,
-        createdAt: new Date().toISOString()
+      recBtn.onclick = async () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          stopRecording();
+        } else {
+          startRecording();
+        }
       };
 
-      memories.push(newMemory);
-      saveMemories();
-      renderTimeline();
+      saveBtn.onclick = () => {
+        if (!recordedAudioBase64) return;
 
-      // Reset form
-      memoryForm.reset();
-      categorySelect.dispatchEvent(new Event('change'));
-      scrollToYear(year);
-    });
+        const year = parseInt(document.getElementById('audioYearSelect').value);
+        const title = document.getElementById('audioTitleInput').value.trim() || 'Recorded Voice Memory';
 
-    function convertFileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-      });
-    }
+        const memory = {
+          id: 'mem_' + Date.now(),
+          year,
+          age: year - BIRTH_YEAR,
+          category: 'audio',
+          title,
+          details: 'Voice recording saved on ' + new Date().toLocaleDateString(),
+          audioData: recordedAudioBase64,
+          createdAt: new Date().toISOString()
+        };
 
-    function saveMemories() {
-      localStorage.setItem('life_journal_memories', JSON.stringify(memories));
-    }
-
-    function deleteMemory(id) {
-      if (confirm('Delete this memory?')) {
-        memories = memories.filter(m => m.id !== id);
+        memories.push(memory);
         saveMemories();
         renderTimeline();
+
+        recordedAudioBase64 = null;
+        document.getElementById('audioPreview').classList.add('hidden');
+        document.getElementById('audioTitleInput').value = '';
+        saveBtn.disabled = true;
+        scrollToYear(year);
+      };
+    }
+
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(recordedAudioBlob);
+          const preview = document.getElementById('audioPreview');
+          preview.src = audioUrl;
+          preview.classList.remove('hidden');
+
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            recordedAudioBase64 = reader.result;
+            document.getElementById('saveVoiceClipBtn').disabled = false;
+          };
+          reader.readAsDataURL(recordedAudioBlob);
+        };
+
+        mediaRecorder.start();
+        recSeconds = 0;
+        document.getElementById('recStatus').textContent = 'Recording... Click to stop.';
+        document.getElementById('recordToggleBtn').classList.add('recording-pulse');
+        
+        recTimerInterval = setInterval(() => {
+          recSeconds++;
+          const mins = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+          const secs = String(recSeconds % 60).padStart(2, '0');
+          document.getElementById('recTimer').textContent = `${mins}:${secs}`;
+        }, 1000);
+
+      } catch (err) {
+        alert('Microphone access denied or not supported in browser.');
       }
     }
 
-    // Render Timeline grouped by Year
-    function renderTimeline() {
-      timelineContainer.innerHTML = '';
+    function stopRecording() {
+      if (mediaRecorder) {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      }
+      clearInterval(recTimerInterval);
+      document.getElementById('recordToggleBtn').classList.remove('recording-pulse');
+      document.getElementById('recStatus').textContent = 'Recording complete. Preview below.';
+    }
 
-      if (memories.length === 0) {
-        timelineContainer.innerHTML = `
-          <div class="empty-state">
-            <p>🌟 Your timeline is ready to receive your memories.</p>
-            <p style="font-size: 0.85rem; margin-top: 6px;">Use the voice button or form above to begin adding life events.</p>
+    function setupSpeechRecognition() {
+      const btn = document.getElementById('aiSpeechDictateBtn');
+      const input = document.getElementById('aiStoryInput');
+
+      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        btn.style.display = 'none';
+        return;
+      }
+
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SpeechRec();
+      rec.continuous = true;
+      rec.interimResults = true;
+      let isDictating = false;
+
+      rec.onresult = (e) => {
+        let transcript = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        input.value = transcript;
+      };
+
+      rec.onend = () => {
+        isDictating = false;
+        document.getElementById('speechIcon').textContent = '🎙️';
+        document.getElementById('speechText').textContent = 'Speech Dictate';
+      };
+
+      btn.onclick = () => {
+        if (isDictating) {
+          rec.stop();
+        } else {
+          rec.start();
+          isDictating = true;
+          document.getElementById('speechIcon').textContent = '⏹️️';
+          document.getElementById('speechText').textContent = 'Stop Dictation';
+        }
+      };
+    }
+
+    function renderTimeline() {
+      const container = document.getElementById('timelineContainer');
+      const countEl = document.getElementById('totalMemoriesCount');
+      const filterCat = document.getElementById('filterCategory').value;
+
+      container.innerHTML = '';
+
+      let filtered = memories;
+      if (filterCat !== 'all') {
+        filtered = memories.filter(m => m.category === filterCat);
+      }
+
+      countEl.textContent = `${filtered.length} Memories Logged`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-500 text-xs">
+            <p class="text-base font-semibold text-slate-400 mb-1">No memories found</p>
+            <p>Start by analyzing a story with AI, recording a voice clip, or uploading photos.</p>
           </div>
         `;
         return;
       }
 
-      // Group memories by year in descending order
+      // Group by year descending
       const grouped = {};
-      memories.forEach(m => {
+      filtered.forEach(m => {
         if (!grouped[m.year]) grouped[m.year] = [];
         grouped[m.year].push(m);
       });
@@ -703,100 +717,252 @@
 
       sortedYears.forEach(year => {
         const age = year - BIRTH_YEAR;
-        const yearSection = document.createElement('div');
-        yearSection.className = 'year-section';
-        yearSection.id = `year-section-${year}`;
+        const yearSec = document.createElement('div');
+        yearSec.className = 'relative space-y-3';
+        yearSec.id = `year-section-${year}`;
 
-        yearSection.innerHTML = `
-          <div class="year-heading">
-            <h3>${year}</h3>
-            <span>• Age ${age}</span>
+        // Sticky Year Marker
+        yearSec.innerHTML = `
+          <div class="sticky top-[106px] z-30 inline-flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-1 rounded-full text-xs font-bold shadow-md -ml-7 sm:-ml-9">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+            <span class="text-sky-300 font-extrabold text-sm">${year}</span>
+            <span class="text-slate-400 font-normal">Age ~${age}</span>
           </div>
         `;
 
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'space-y-3 pt-1';
+
         grouped[year].forEach(m => {
           const card = document.createElement('div');
-          card.className = 'memory-card';
+          card.className = 'glass-card rounded-2xl p-4 transition hover:border-slate-700 relative group space-y-2';
 
-          const catTagClass = `tag-${m.category}`;
-          const catLabel = getCategoryLabel(m.category);
+          const badgeInfo = getCategoryBadge(m.category);
 
           card.innerHTML = `
-            <div class="card-top">
-              <span class="category-tag ${catTagClass}">${catLabel}</span>
-              <div class="card-actions">
-                <button class="delete-btn" onclick="deleteMemory('${m.id}')" title="Delete">🗑️</button>
-              </div>
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1 text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-md ${badgeInfo.style}">
+                ${badgeInfo.label}
+              </span>
+              <button onclick="deleteMemory('${m.id}')" class="text-slate-500 hover:text-rose-400 text-xs transition px-1" title="Delete entry">
+                🗑️
+              </button>
             </div>
-            <div class="memory-title">${escapeHtml(m.title)}</div>
-            ${m.details ? `<div class="memory-desc">${escapeHtml(m.details)}</div>` : ''}
-            ${m.photoData ? `<img src="${m.photoData}" class="memory-img" alt="Memory photo" />` : ''}
+
+            <h3 class="font-bold text-sm text-slate-100">${escapeHtml(m.title)}</h3>
+            
+            ${m.details ? `<p class="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">${escapeHtml(m.details)}</p>` : ''}
+
+            ${m.photoData ? `<img src="${m.photoData}" class="w-full max-h-80 object-cover rounded-xl border border-slate-800 mt-2" alt="Memory photo" />` : ''}
+
+            ${m.audioData ? `
+              <div class="mt-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
+                <audio controls src="${m.audioData}" class="w-full h-8"></audio>
+              </div>
+            ` : ''}
           `;
-          yearSection.appendChild(card);
+
+          cardsContainer.appendChild(card);
         });
 
-        timelineContainer.appendChild(yearSection);
+        yearSec.appendChild(cardsContainer);
+        container.appendChild(yearSec);
       });
     }
 
-    function getCategoryLabel(cat) {
+    function getCategoryBadge(cat) {
       const map = {
-        photo: '📸 Photo',
-        place: '🏡 Place',
-        job: '💼 Job',
-        trip: '✈️ Trip',
-        event: '🎉 Event',
-        person: '👥 Person',
-        pet: '🐾 Pet'
+        photo: { label: '📸 Photo', style: 'bg-rose-500/20 text-rose-300 border border-rose-500/30' },
+        place: { label: '🏡 Place', style: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' },
+        job: { label: '💼 Job', style: 'bg-amber-500/20 text-amber-300 border border-amber-500/30' },
+        trip: { label: '✈️ Trip', style: 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' },
+        event: { label: '🎉 Event', style: 'bg-purple-500/20 text-purple-300 border border-purple-500/30' },
+        person: { label: '👥 Person', style: 'bg-pink-500/20 text-pink-300 border border-pink-500/30' },
+        pet: { label: '🐾 Pet', style: 'bg-lime-500/20 text-lime-300 border border-lime-500/30' },
+        audio: { label: '🎙 Voice Note', style: 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' }
       };
-      return map[cat] || 'Memory';
+      return map[cat] || { label: 'Memory', style: 'bg-slate-800 text-slate-300' };
+    }
+
+    function setupEventListeners() {
+      // Manual Form Submission
+      document.getElementById('manualForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const category = document.getElementById('manualCategory').value;
+        const year = parseInt(document.getElementById('manualYearSelect').value);
+        const title = document.getElementById('manualTitle').value.trim();
+        const details = document.getElementById('manualDetails').value.trim();
+        const photoFile = document.getElementById('photoInput').files[0];
+
+        let photoData = null;
+        if (photoFile) {
+          photoData = await readFileAsBase64(photoFile);
+        }
+
+        const memory = {
+          id: 'mem_' + Date.now(),
+          year,
+          age: year - BIRTH_YEAR,
+          category,
+          title,
+          details,
+          photoData,
+          createdAt: new Date().toISOString()
+        };
+
+        memories.push(memory);
+        saveMemories();
+        renderTimeline();
+
+        document.getElementById('manualForm').reset();
+        scrollToYear(year);
+      };
+
+      // AI Analysis Trigger
+      document.getElementById('parseWithAiBtn').onclick = () => {
+        const text = document.getElementById('aiStoryInput').value;
+        parseStoryWithGemini(text);
+      };
+
+      document.getElementById('confirmAiBtn').onclick = () => {
+        if (pendingAiMemories.length > 0) {
+          memories.push(...pendingAiMemories);
+          saveMemories();
+          renderTimeline();
+          pendingAiMemories = [];
+          document.getElementById('aiPreviewBox').classList.add('hidden');
+          document.getElementById('aiStoryInput').value = '';
+        }
+      };
+
+      document.getElementById('cancelAiBtn').onclick = () => {
+        pendingAiMemories = [];
+        document.getElementById('aiPreviewBox').classList.add('hidden');
+      };
+
+      // Filter listener
+      document.getElementById('filterCategory').onchange = renderTimeline;
+
+      // API Key Modal Actions
+      document.getElementById('openApiKeyBtn').onclick = () => openApiKeyModal();
+      document.getElementById('closeApiKeyBtn').onclick = () => {
+        document.getElementById('apiKeyModal').classList.add('hidden');
+      };
+      document.getElementById('saveApiKeyBtn').onclick = () => {
+        userApiKey = document.getElementById('apiKeyInput').value.trim();
+        localStorage.setItem('gemini_api_key', userApiKey);
+        updateApiKeyStatusUI();
+        document.getElementById('apiKeyModal').classList.add('hidden');
+      };
+      document.getElementById('clearApiKeyBtn').onclick = () => {
+        userApiKey = '';
+        localStorage.removeItem('gemini_api_key');
+        document.getElementById('apiKeyInput').value = '';
+        updateApiKeyStatusUI();
+        document.getElementById('apiKeyModal').classList.add('hidden');
+      };
+
+      // Toggle key visibility
+      document.getElementById('toggleShowKeyBtn').onclick = () => {
+        const input = document.getElementById('apiKeyInput');
+        input.type = input.type === 'password' ? 'text' : 'password';
+      };
+
+      // Export / Import
+      document.getElementById('exportBtn').onclick = exportBackupJSON;
+      document.getElementById('importBtn').onclick = () => document.getElementById('importFileInput').click();
+      document.getElementById('importFileInput').onchange = importBackupJSON;
+    }
+
+    function setupCategoryLabels() {
+      const select = document.getElementById('manualCategory');
+      const label = document.getElementById('manualTitleLabel');
+      select.onchange = () => {
+        const val = select.value;
+        if (val === 'photo') label.textContent = 'Person / Subject Name';
+        else if (val === 'place') label.textContent = 'Location / Address / City';
+        else if (val === 'job') label.textContent = 'Job Title / Workplace';
+        else if (val === 'trip') label.textContent = 'Trip Destination';
+        else if (val === 'person') label.textContent = 'Person / Friend Name';
+        else if (val === 'pet') label.textContent = 'Pet Name / Species';
+        else label.textContent = 'Event Title';
+      };
+    }
+
+    function switchTab(tab) {
+      document.getElementById('panelAi').classList.toggle('hidden', tab !== 'ai');
+      document.getElementById('panelAudio').classList.toggle('hidden', tab !== 'audio');
+      document.getElementById('panelManual').classList.toggle('hidden', tab !== 'manual');
+
+      document.getElementById('tabAi').className = tab === 'ai' 
+        ? 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20'
+        : 'tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2';
+
+      document.getElementById('tabAudio').className = tab === 'audio' 
+        ? 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/20'
+        : 'tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2';
+
+      document.getElementById('tabManual').className = tab === 'manual' 
+        ? 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-sky-500 to-emerald-600 text-white shadow-md shadow-sky-500/20'
+        : 'tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition flex items-center gap-2';
+    }
+
+    function deleteMemory(id) {
+      memories = memories.filter(m => m.id !== id);
+      saveMemories();
+      renderTimeline();
+    }
+
+    function saveMemories() {
+      localStorage.setItem('life_journal_memories_v2', JSON.stringify(memories));
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function exportBackupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(memories, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `life_journal_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    }
+
+    function importBackupJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (Array.isArray(parsed)) {
+            memories = parsed;
+            saveMemories();
+            renderTimeline();
+            alert('Journal backup restored successfully!');
+          }
+        } catch (err) {
+          alert('Failed to parse backup JSON file.');
+        }
+      };
+      reader.readAsText(file);
     }
 
     function escapeHtml(str) {
+      if (!str) return '';
       return str.replace(/[&<>"']/g, m => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
       })[m]);
     }
-
-    // JSON Backup Export & Import
-    exportBtn.addEventListener('click', () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(memories, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `life_journal_backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    });
-
-    importBtn.addEventListener('click', () => importFile.click());
-
-    importFile.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const imported = JSON.parse(event.target.result);
-          if (Array.isArray(imported)) {
-            memories = imported;
-            saveMemories();
-            renderTimeline();
-            alert('Journal timeline successfully restored!');
-          } else {
-            alert('Invalid backup file format.');
-          }
-        } catch (err) {
-          alert('Failed to parse JSON file.');
-        }
-      };
-      reader.readAsText(file);
-    });
-
-    // Initialize App
-    initYearPickers();
-    renderTimeline();
   </script>
 </body>
 </html>
+```
