@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -64,7 +64,6 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-sky-500 selection:text-white">
 
-  <!-- Top Navigation Header -->
   <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-xl">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-sky-500/20">
@@ -74,21 +73,19 @@
         <h1 class="font-bold text-base md:text-xl tracking-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">
           Life Journal & Timeline
         </h1>
-        <p class="text-xs text-slate-400 font-medium">Born August 1974 • Digital Legacy</p>
+        <p class="text-xs text-slate-400 font-medium">Born August 21, 1974 • Digital Legacy</p>
       </div>
     </div>
 
-    <!-- API Key Status and Main Control Action Buttons -->
+    <!-- API Key Status and Main Controls -->
     <div class="flex items-center space-x-2 flex-wrap gap-y-2">
-      <!-- Status Badge -->
       <div id="apiKeyStatusBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
         <span>Key Missing</span>
       </div>
 
-      <!-- Highly Visible API Key Button -->
       <button id="openApiKeyBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/20 transition flex items-center gap-1.5 cursor-pointer">
-        <span>⚙️</span>
+        <span>⚙️️</span>
         <span>Set API Key</span>
       </button>
 
@@ -102,20 +99,17 @@
     </div>
   </header>
 
-  <!-- Horizontal Scrollable Year Ribbon -->
   <nav class="sticky top-[61px] z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 py-2.5 px-3 overflow-x-auto shadow-inner">
     <div id="yearRibbon" class="flex space-x-2 min-w-max px-2">
       <!-- Year chips dynamically populated via JS -->
     </div>
   </nav>
 
-  <!-- Main App Layout Container -->
   <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-1 space-y-8">
 
-    <!-- Input Studio Container -->
     <section class="glass-panel rounded-2xl p-5 shadow-2xl border border-slate-800">
       
-      <!-- Studio Tabs Navigation -->
+      <!-- Tabs Navigation -->
       <div class="flex border-b border-slate-800 pb-3 mb-4 gap-2 overflow-x-auto">
         <button id="tabAi" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/20" onclick="switchTab('ai')">
           <span>✨</span> AI Story Deciphering
@@ -135,7 +129,7 @@
             <span>💡 How AI Memory Deciphering Works</span>
           </div>
           <p class="text-slate-400">
-            Talk or write freely about your life! Say things like: <em class="text-slate-200">"I was born in 1974. I had my daughter Krystin in 1997. In 2006 when I was 32 I moved to Vancouver and worked at USPS."</em> Gemini AI automatically categorizes your memories and calculates your exact age for each year.
+            Talk or write freely about your life! Say things like: <em class="text-slate-200">"I was born August 21, 1974 in Portland. I had my daughter Krystin in 1997. In 2006 when I was 32 I moved to Vancouver WA and worked at USPS."</em> Gemini AI automatically categorizes your memories and calculates your age for each year.
           </p>
         </div>
 
@@ -151,7 +145,6 @@
           <span>✨</span> Parse Life Story into Timeline Cards (Gemini AI)
         </button>
 
-        <!-- AI Extraction Preview Confirmation Area -->
         <div id="aiPreviewBox" class="hidden bg-slate-900/90 rounded-xl p-4 border border-indigo-500/30 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
@@ -160,9 +153,7 @@
             <span id="extractedCountBadge" class="text-xs bg-indigo-500/20 text-indigo-300 font-bold px-2 py-0.5 rounded-full">0 found</span>
           </div>
 
-          <div id="extractedList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-            <!-- Dynamically populated AI extracted cards -->
-          </div>
+          <div id="extractedList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
 
           <div class="flex gap-2 pt-2">
             <button id="confirmAiBtn" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition">
@@ -277,13 +268,10 @@
     </div>
 
     <!-- Main Timeline Cards Container -->
-    <section id="timelineContainer" class="relative pl-4 sm:pl-6 space-y-8 border-l-2 border-slate-800">
-      <!-- Dynamic Year Sections & Memory Cards -->
-    </section>
+    <section id="timelineContainer" class="relative pl-4 sm:pl-6 space-y-8 border-l-2 border-slate-800"></section>
 
   </main>
 
-  <!-- Dedicated API Key Modal -->
   <div id="apiKeyModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="glass-panel max-w-md w-full rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -294,7 +282,7 @@
       </div>
 
       <p id="apiKeyModalNotice" class="text-xs text-slate-300 leading-relaxed">
-        To enable automatic AI story deciphering, paste your Google Gemini API key below. The key is stored locally and securely in your browser.
+        To enable automatic AI story deciphering, paste your Google Gemini API key below. The key is stored locally in your browser.
       </p>
 
       <div class="space-y-1">
@@ -306,7 +294,7 @@
       </div>
 
       <div class="text-[11px] text-slate-400 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-        📌 Don't have a key? Get a free key at <a href="https://aistudio.google.com" target="_blank" class="text-sky-400 underline font-semibold">aistudio.google.com</a>.
+        📌 Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-sky-400 underline font-semibold">aistudio.google.com/app/apikey</a>.
       </div>
 
       <div class="flex gap-2 pt-2">
@@ -322,7 +310,8 @@
 
   <script>
     const BIRTH_YEAR = 1974;
-    const BIRTH_MONTH = 7; // August (0-indexed: 7)
+    const BIRTH_MONTH = 7; // August (0-indexed)
+    const BIRTH_DAY = 21;  // August 21, 1974
     const CURRENT_YEAR = new Date().getFullYear();
 
     let memories = JSON.parse(localStorage.getItem('life_journal_memories_v2') || '[]');
@@ -356,7 +345,6 @@
       manualSelect.innerHTML = '';
       audioSelect.innerHTML = '';
 
-      // Populate year selects (descending)
       for (let yr = CURRENT_YEAR; yr >= BIRTH_YEAR; yr--) {
         const age = yr - BIRTH_YEAR;
 
@@ -371,7 +359,6 @@
         audioSelect.appendChild(opt2);
       }
 
-      // Build Ribbon chronologically (1974 -> Current Year)
       for (let yr = BIRTH_YEAR; yr <= CURRENT_YEAR; yr++) {
         const age = yr - BIRTH_YEAR;
         const chip = document.createElement('button');
@@ -420,17 +407,27 @@
         return;
       }
 
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
+      // Models chain to prevent HTTP 404 error across API versions
+      const modelsToTry = [
+        'gemini-1.5-flash',
+        'gemini-2.0-flash',
+        'gemini-1.5-pro'
+      ];
 
-      const systemPrompt = `You are a life story memory extractor for a person born in August 1974. 
+      const parseBtn = document.getElementById('parseWithAiBtn');
+      const originalText = parseBtn.innerHTML;
+      parseBtn.disabled = true;
+      parseBtn.innerHTML = `<span>⏳</span> Analyzing with Gemini AI...`;
+
+      const systemPrompt = `You are a life story memory extractor for a person born on August 21, 1974. 
 Given continuous story text or transcribed dictation, extract discrete life events.
 Return a valid JSON ARRAY of objects. Each object must have:
 - "year": integer (calculated based on explicit years mentioned e.g. 1997, or calculated from spoken age: birth year 1974 + age. If age is 32, year is 2006).
 - "category": string, exactly one of: ['photo','place','job','trip','event','person','pet']
-- "title": short concise title (e.g., "Daughter Krystin Born", "Moved to Vancouver", "Started USPS Job")
+- "title": short concise title (e.g., "Born in Portland", "Lived in Vancouver WA", "Daughter Krystin Born")
 - "details": concise clean description of the memory.
 
-Be accurate with dates relative to birth year 1974.`;
+Be accurate with dates relative to birth date August 21, 1974.`;
 
       const payload = {
         contents: [{ role: "user", parts: [{ text: userStoryText }] }],
@@ -453,61 +450,55 @@ Be accurate with dates relative to birth year 1974.`;
         }
       };
 
-      const parseBtn = document.getElementById('parseWithAiBtn');
-      const originalText = parseBtn.innerHTML;
-      parseBtn.disabled = true;
-      parseBtn.innerHTML = `<span>⏳</span> Analyzing with Gemini AI...`;
+      let success = false;
+      let lastError = null;
 
-      try {
-        let response = await fetchWithRetry(apiUrl, payload);
-        let result = await response.json();
-
-        let jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!jsonText) throw new Error("No response content received from Gemini.");
-
-        let parsedArray = JSON.parse(jsonText);
-        if (Array.isArray(parsedArray) && parsedArray.length > 0) {
-          pendingAiMemories = parsedArray.map(item => ({
-            id: 'mem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-            year: item.year || 1974,
-            age: (item.year || 1974) - BIRTH_YEAR,
-            category: item.category || 'event',
-            title: item.title || 'Extracted Memory',
-            details: item.details || '',
-            createdAt: new Date().toISOString()
-          }));
-
-          displayAiPreview(pendingAiMemories);
-        } else {
-          alert("Gemini parsed the text, but couldn't find specific timeline events. Try mentioning years or ages!");
-        }
-      } catch (err) {
-        console.error("Gemini API Error:", err);
-        alert("Failed to analyze story with Gemini AI: " + err.message + "\nPlease verify your API key using the ⚙️ Set API Key button.");
-      } finally {
-        parseBtn.disabled = false;
-        parseBtn.innerHTML = originalText;
-      }
-    }
-
-    async function fetchWithRetry(url, payload, retries = 3, delay = 1000) {
-      for (let i = 0; i < retries; i++) {
+      for (const model of modelsToTry) {
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${userApiKey}`;
         try {
-          const res = await fetch(url, {
+          const res = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (res.ok) return res;
-          if (res.status === 429 || res.status >= 500) {
-            await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
-            continue;
+
+          if (!res.ok) {
+            const errText = await res.text();
+            throw new Error(`HTTP ${res.status}: ${errText}`);
           }
-          throw new Error(`HTTP Error ${res.status}`);
-        } catch (e) {
-          if (i === retries - 1) throw e;
-          await new Promise(r => setTimeout(r, delay * Math.pow(2, i)));
+
+          const result = await res.json();
+          let jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+          
+          if (!jsonText) throw new Error("No response content returned from model " + model);
+
+          let parsedArray = JSON.parse(jsonText);
+          if (Array.isArray(parsedArray) && parsedArray.length > 0) {
+            pendingAiMemories = parsedArray.map(item => ({
+              id: 'mem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+              year: item.year || 1974,
+              age: (item.year || 1974) - BIRTH_YEAR,
+              category: item.category || 'event',
+              title: item.title || 'Extracted Memory',
+              details: item.details || '',
+              createdAt: new Date().toISOString()
+            }));
+
+            displayAiPreview(pendingAiMemories);
+            success = true;
+            break; // Successfully extracted
+          }
+        } catch (err) {
+          console.warn(`Attempt with model ${model} failed:`, err);
+          lastError = err;
         }
+      }
+
+      parseBtn.disabled = false;
+      parseBtn.innerHTML = originalText;
+
+      if (!success) {
+        alert("Failed to analyze story with Gemini AI.\n\nError details: " + (lastError ? lastError.message : "Unknown error") + "\n\nPlease verify your API key using the '⚙️ Set API Key' button.");
       }
     }
 
@@ -676,7 +667,7 @@ Be accurate with dates relative to birth year 1974.`;
         } else {
           rec.start();
           isDictating = true;
-          document.getElementById('speechIcon').textContent = '⏹️️';
+          document.getElementById('speechIcon').textContent = '⏹';
           document.getElementById('speechText').textContent = 'Stop Dictation';
         }
       };
@@ -706,7 +697,6 @@ Be accurate with dates relative to birth year 1974.`;
         return;
       }
 
-      // Group by year descending
       const grouped = {};
       filtered.forEach(m => {
         if (!grouped[m.year]) grouped[m.year] = [];
@@ -721,7 +711,6 @@ Be accurate with dates relative to birth year 1974.`;
         yearSec.className = 'relative space-y-3';
         yearSec.id = `year-section-${year}`;
 
-        // Sticky Year Marker
         yearSec.innerHTML = `
           <div class="sticky top-[106px] z-30 inline-flex items-center gap-2 bg-slate-900 border border-slate-700/80 px-3 py-1 rounded-full text-xs font-bold shadow-md -ml-7 sm:-ml-9">
             <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
@@ -785,7 +774,6 @@ Be accurate with dates relative to birth year 1974.`;
     }
 
     function setupEventListeners() {
-      // Manual Form Submission
       document.getElementById('manualForm').onsubmit = async (e) => {
         e.preventDefault();
         const category = document.getElementById('manualCategory').value;
@@ -818,7 +806,6 @@ Be accurate with dates relative to birth year 1974.`;
         scrollToYear(year);
       };
 
-      // AI Analysis Trigger
       document.getElementById('parseWithAiBtn').onclick = () => {
         const text = document.getElementById('aiStoryInput').value;
         parseStoryWithGemini(text);
@@ -840,10 +827,8 @@ Be accurate with dates relative to birth year 1974.`;
         document.getElementById('aiPreviewBox').classList.add('hidden');
       };
 
-      // Filter listener
       document.getElementById('filterCategory').onchange = renderTimeline;
 
-      // API Key Modal Actions
       document.getElementById('openApiKeyBtn').onclick = () => openApiKeyModal();
       document.getElementById('closeApiKeyBtn').onclick = () => {
         document.getElementById('apiKeyModal').classList.add('hidden');
@@ -862,13 +847,11 @@ Be accurate with dates relative to birth year 1974.`;
         document.getElementById('apiKeyModal').classList.add('hidden');
       };
 
-      // Toggle key visibility
       document.getElementById('toggleShowKeyBtn').onclick = () => {
         const input = document.getElementById('apiKeyInput');
         input.type = input.type === 'password' ? 'text' : 'password';
       };
 
-      // Export / Import
       document.getElementById('exportBtn').onclick = exportBackupJSON;
       document.getElementById('importBtn').onclick = () => document.getElementById('importFileInput').click();
       document.getElementById('importFileInput').onchange = importBackupJSON;
@@ -920,10 +903,11 @@ Be accurate with dates relative to birth year 1974.`;
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+        reader.onload = () => resolve(resolveResult(reader.result));
         reader.onerror = err => reject(err);
         reader.readAsDataURL(file);
       });
+      function resolveResult(res) { return res; }
     }
 
     function exportBackupJSON() {
