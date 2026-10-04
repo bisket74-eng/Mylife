@@ -48,7 +48,7 @@
 
     main { max-width: 720px; width: 100%; margin: 0 auto; padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Input Rows (Only 3 Clean Rows) */
+    /* Input Rows */
     .input-row-card {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
       padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
@@ -80,7 +80,7 @@
       padding: 8px 18px; border-radius: 20px; font-size: 0.88rem; font-weight: 700; cursor: pointer;
     }
 
-    /* Round Drum/Scroll Year & Month Picker */
+    /* Round Wheel Selectors */
     .picker-container { display: flex; gap: 8px; align-items: center; }
     .wheel-picker-wrap {
       display: inline-flex; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--card-border);
@@ -92,7 +92,7 @@
     }
     select.wheel-select option { background: #1e293b; color: #fff; }
 
-    /* Media Form Inline Elements */
+    /* Media Input Inline Elements */
     .media-input-inline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; width: 100%; }
     input[type="text"].short-input {
       flex: 1; min-width: 150px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--card-border);
@@ -121,7 +121,7 @@
     .year-header-tag h2 { font-size: 1.2rem; font-weight: 800; color: var(--accent-blue); }
     .year-header-tag span { font-size: 0.8rem; color: var(--text-muted); }
 
-    /* Ordered Category Cards List under Each Year */
+    /* Category Cards List */
     .cat-list { display: flex; flex-direction: column; gap: 8px; }
     .cat-row {
       background: rgba(15, 23, 42, 0.5); border-left: 4px solid var(--card-border); border-radius: 6px 10px 10px 6px;
@@ -153,7 +153,7 @@
     .media-thumb { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-top: 6px; border: 1px solid var(--card-border); }
     audio { width: 100%; height: 32px; margin-top: 4px; }
 
-    /* Modal / Settings Overlay */
+    /* Settings Overlay */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; padding: 16px; }
     .modal { background: #1e293b; border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
     .modal-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
@@ -251,7 +251,7 @@
     <div id="timelineContainer" class="timeline"></div>
   </main>
 
-  <!-- SETTINGS & IMPORTANT INFO VAULT MODAL -->
+  <!-- SETTINGS MODAL -->
   <div class="modal-overlay hidden" id="settingsModal">
     <div class="modal">
       <div class="modal-title">
@@ -259,14 +259,12 @@
         <button class="del-btn" id="closeSettingsBtn" style="font-size:1.2rem;">✖</button>
       </div>
 
-      <!-- Gemini API Key -->
       <div class="settings-group">
         <label>Gemini API Key</label>
         <input type="password" id="apiKeyInput" class="short-input" placeholder="AIzaSy..." />
         <button class="btn-add-media" id="saveKeyBtn">Save API Key</button>
       </div>
 
-      <!-- Backup / Restore -->
       <div class="settings-group">
         <label>Data Backup & Restore</label>
         <div style="display:flex; gap:8px;">
@@ -276,7 +274,6 @@
         </div>
       </div>
 
-      <!-- Important Info / Legacy Folder -->
       <div class="settings-group">
         <label>📁 Important Info Vault (Insurance & Life Docs)</label>
         <p style="font-size:0.78rem; color:var(--text-muted);">Keep life insurance policy photos, estate notes, or voice instructions for your family here.</p>
@@ -310,7 +307,6 @@
     const settingsModal = document.getElementById('settingsModal');
     const apiKeyInput = document.getElementById('apiKeyInput');
 
-    // Populate Year Wheel Selectors
     function initYearWheelPickers() {
       photoYearSelect.innerHTML = '';
       voiceYearSelect.innerHTML = '';
@@ -326,11 +322,9 @@
       }
     }
 
-    // Render Continuous Blank/Filled Timeline (1974 - 2026)
     function renderTimeline() {
       timelineContainer.innerHTML = '';
 
-      // Create lookup map of memories grouped by year
       const yearMap = {};
       memories.forEach(m => {
         if (!yearMap[m.year]) yearMap[m.year] = [];
@@ -351,42 +345,30 @@
             <span>• Age ${age}</span>
           </div>
           <div class="cat-list">
-            <!-- 1. Where I Lived -->
             <div class="cat-row lived">
               <span class="cat-label">🏡 Where I Lived</span>
               <div class="cat-entries" id="entries-${y}-place"></div>
             </div>
-
-            <!-- 2. What Job I Had -->
             <div class="cat-row job">
               <span class="cat-label">💼 What Job I Had</span>
               <div class="cat-entries" id="entries-${y}-job"></div>
             </div>
-
-            <!-- 3. Trips I Took -->
             <div class="cat-row trips">
               <span class="cat-label">✈️ Trips I Took</span>
               <div class="cat-entries" id="entries-${y}-trip"></div>
             </div>
-
-            <!-- 4. Important People -->
             <div class="cat-row people">
               <span class="cat-label">👥 Important People</span>
               <div class="cat-entries" id="entries-${y}-person"></div>
             </div>
-
-            <!-- 5. Important Events -->
             <div class="cat-row events">
               <span class="cat-label">🎉 Important Events</span>
               <div class="cat-entries" id="entries-${y}-event"></div>
             </div>
-
-            <!-- Photos & Voice Memos -->
             <div class="cat-row photos">
               <span class="cat-label">📸 Photos & Media</span>
               <div class="cat-entries" id="entries-${y}-photo"></div>
             </div>
-
             <div class="cat-row voice">
               <span class="cat-label">🎙️ Voice Memos</span>
               <div class="cat-entries" id="entries-${y}-voice"></div>
@@ -396,7 +378,6 @@
 
         timelineContainer.appendChild(yearBlock);
 
-        // Populate entries into respective sub-boxes
         populateSubBox(y, 'place', yearItems.filter(i => i.category === 'place'));
         populateSubBox(y, 'job', yearItems.filter(i => i.category === 'job'));
         populateSubBox(y, 'trip', yearItems.filter(i => i.category === 'trip'));
@@ -424,7 +405,7 @@
         div.innerHTML = `
           <div>
             <strong>${monthBadge}${escapeHtml(item.title)}</strong>
-            ${item.details ? `<div style="font-size:0.82rem; color:#cbd5e1;">${escapeHtml(item.details)}</div>` : ''}
+            ${item.details && item.details !== item.title ? `<div style="font-size:0.82rem; color:#cbd5e1;">${escapeHtml(item.details)}</div>` : ''}
             ${item.photoData ? `<img src="${item.photoData}" class="media-thumb" />` : ''}
             ${item.audioData ? `<audio src="${item.audioData}" controls></audio>` : ''}
           </div>
@@ -434,7 +415,7 @@
       });
     }
 
-    // Speech Dictation
+    // Dictation
     const micBtn = document.getElementById('micBtn');
     const micText = document.getElementById('micText');
     const storyInput = document.getElementById('storyInput');
@@ -478,16 +459,21 @@
       if (apiKey && apiKey.length > 5) {
         try {
           const prompt = `Birth year: August 21, 1974. Current year: 2026.
-Extract memories into JSON array. For multi-year spans (e.g. "lived in Reno from age 7 to 20"), create separate items for EACH year in that range (1981 through 1994).
-Categories allowed: [place, job, trip, person, event].
-Order mapping:
-1. place = Where I lived
-2. job = What job I had
-3. trip = Trips I took
-4. person = Important people
-5. event = Important events
+Extract memories into a JSON array of objects.
 
-JSON structure: [{"year": number, "category": string, "title": string, "details": string}]
+STRICT RULES:
+1. EXTRACT EXACT YEARS: Look for explicit years (e.g., "2026", "1997", "1981"). Assign memories to their SPECIFIC year. DO NOT default to 1974 unless the event actually happened in 1974.
+2. EXPAND YEAR SPANS: For date spans (e.g. "from 1974 to 1981" or "from age 0 to 7"), create a separate object for EVERY SINGLE YEAR in that span (1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981).
+3. AGE CALCULATIONS: "when I was 32" -> year 2006 (1974 + 32).
+4. CATEGORIES ALLOWED:
+   - "place" (Where I lived)
+   - "job" (What job I had)
+   - "trip" (Trips I took)
+   - "person" (Important people)
+   - "event" (Important events)
+5. CLEAN TITLES: Keep titles short and clean (e.g., "Vancouver, Washington" or "Trip to Spain"). Put full sentences in details.
+
+JSON Structure: [{"year": number, "category": string, "title": string, "details": string}]
 
 Text: "${text}"`;
 
@@ -503,7 +489,7 @@ Text: "${text}"`;
             items = JSON.parse(raw);
           }
         } catch (err) {
-          console.warn('API error, using local parser:', err);
+          console.warn('API error, switching to local parser:', err);
         }
       }
 
@@ -511,8 +497,8 @@ Text: "${text}"`;
 
       items.forEach(item => {
         memories.push({
-          id: Date.now().toString() + Math.random().toString().slice(2,5),
-          year: item.year || 1974,
+          id: Date.now().toString() + Math.random().toString().slice(2,6),
+          year: item.year || 2026,
           category: item.category || 'event',
           title: item.title || 'Life Story',
           details: item.details || text
@@ -525,35 +511,81 @@ Text: "${text}"`;
       parseBtn.disabled = false;
     };
 
+    // Advanced Multi-Year & Target Year Local Parser
     function fallbackLocalParse(text) {
       const lower = text.toLowerCase();
-      let startYear = 1974, endYear = 1974;
+      const results = [];
 
-      const ageSpan = lower.match(/age\s+(\d{1,2})\s+to\s+(\d{1,2})/i);
-      if (ageSpan) {
-        startYear = BIRTH_YEAR + parseInt(ageSpan[1]);
-        endYear = BIRTH_YEAR + parseInt(ageSpan[2]);
-      } else {
-        const singleAge = lower.match(/(?:when i was|at age|i was)\s+(\d{1,2})/i);
-        if (singleAge) startYear = endYear = BIRTH_YEAR + parseInt(singleAge[1]);
+      // Category Detection
+      let category = 'event';
+      if (lower.includes('lived') || lower.includes('moved') || lower.includes('vancouver') || lower.includes('reno')) category = 'place';
+      else if (lower.includes('worked') || lower.includes('job') || lower.includes('hired') || lower.includes('usps') || lower.includes('clerk')) category = 'job';
+      else if (lower.includes('trip') || lower.includes('traveled') || lower.includes('spain') || lower.includes('vacation')) category = 'trip';
+      else if (lower.includes('friend') || lower.includes('daughter') || lower.includes('had krystin') || lower.includes('had jesse')) category = 'person';
+
+      // Title Cleaning
+      let title = text.slice(0, 45) + '...';
+      if (category === 'place') {
+        const loc = text.match(/(?:in|to)\s+([A-Za-z\s,]+?)(?=\s+from|\s+between|\s+when|\s+at|\.|$)/i);
+        title = loc ? loc[1].trim() : (lower.includes('vancouver') ? 'Vancouver, Washington' : 'Place Lived');
+      } else if (category === 'trip') {
+        const tripMatch = text.match(/trip\s+to\s+([A-Za-z\s]+)/i);
+        title = tripMatch ? `Trip to ${tripMatch[1].trim()}` : (lower.includes('spain') ? 'Trip to Spain' : 'Trip');
       }
 
-      let category = 'event';
-      if (lower.includes('lived') || lower.includes('moved') || lower.includes('reno')) category = 'place';
-      else if (lower.includes('worked') || lower.includes('job') || lower.includes('usps')) category = 'job';
-      else if (lower.includes('trip') || lower.includes('traveled')) category = 'trip';
-      else if (lower.includes('friend') || lower.includes('met') || lower.includes('daughter')) category = 'person';
+      // 1. Check for Year Ranges: "from 1974 to 1981", "1974 to 1981"
+      const yearRangeMatch = lower.match(/(?:from\s+)?(19\d\d|20\d\d)\s*(?:to|-|through|until)\s*(19\d\d|20\d\d)/i);
+      
+      // 2. Check for Age Ranges: "from age 7 to 20", "age 0 to 7"
+      const ageRangeMatch = lower.match(/(?:from\s+)?(?:the\s+)?age\s+(?:of\s+)?(\d{1,2})\s*(?:to|-|through|until)\s*(?:the\s+)?(?:age\s+)?(?:of\s+)?(\d{1,2})/i);
 
-      const results = [];
-      for (let y = Math.min(startYear, endYear); y <= Math.max(startYear, endYear); y++) {
-        if (y >= BIRTH_YEAR && y <= CURRENT_YEAR) {
-          results.push({ year: y, category: category, title: text.slice(0, 40) + '...', details: text });
+      if (yearRangeMatch) {
+        const startY = parseInt(yearRangeMatch[1]);
+        const endY = parseInt(yearRangeMatch[2]);
+        for (let y = Math.min(startY, endY); y <= Math.max(startY, endY); y++) {
+          if (y >= BIRTH_YEAR && y <= CURRENT_YEAR) {
+            results.push({ year: y, category: category, title: title, details: text });
+          }
+        }
+        return results;
+      }
+
+      if (ageRangeMatch) {
+        const startY = BIRTH_YEAR + parseInt(ageRangeMatch[1]);
+        const endY = BIRTH_YEAR + parseInt(ageRangeMatch[2]);
+        for (let y = Math.min(startY, endY); y <= Math.max(startY, endY); y++) {
+          if (y >= BIRTH_YEAR && y <= CURRENT_YEAR) {
+            results.push({ year: y, category: category, title: title, details: text });
+          }
+        }
+        return results;
+      }
+
+      // 3. Extract Specific Mentioned Years (e.g., "2026", "1997", "1974")
+      const yearMatches = [...lower.matchAll(/\b(19\d\d|20\d\d)\b/g)];
+      if (yearMatches.length > 0) {
+        const foundYear = parseInt(yearMatches[yearMatches.length - 1][1]);
+        if (foundYear >= BIRTH_YEAR && foundYear <= CURRENT_YEAR) {
+          results.push({ year: foundYear, category: category, title: title, details: text });
+          return results;
         }
       }
+
+      // 4. Check for Single Age
+      const singleAge = lower.match(/(?:when i was|at age|i was)\s+(\d{1,2})/i);
+      if (singleAge) {
+        const targetYear = BIRTH_YEAR + parseInt(singleAge[1]);
+        if (targetYear >= BIRTH_YEAR && targetYear <= CURRENT_YEAR) {
+          results.push({ year: targetYear, category: category, title: title, details: text });
+          return results;
+        }
+      }
+
+      results.push({ year: CURRENT_YEAR, category: category, title: title, details: text });
       return results;
     }
 
-    // Photo Submission
+    // Photo Upload
     document.getElementById('savePhotoBtn').onclick = async () => {
       const yr = parseInt(photoYearSelect.value);
       const mo = document.getElementById('photoMonth').value;
@@ -582,7 +614,7 @@ Text: "${text}"`;
       document.getElementById('photoFile').value = '';
     };
 
-    // Voice Memo Recorder & Submission
+    // Voice Recorder
     const recAudioBtn = document.getElementById('recAudioBtn');
     const recStatus = document.getElementById('recStatus');
     const audioPreview = document.getElementById('audioPreview');
@@ -707,7 +739,7 @@ Text: "${text}"`;
       return str ? str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]) : '';
     }
 
-    // Modal Control & Backup
+    // Modal & Backup
     document.getElementById('openSettingsBtn').onclick = () => {
       apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
       renderLegacyVault();
